@@ -45,9 +45,9 @@ public class UserService {
     }
 
     /**
-     * @param account
-     * @param oldPsw
-     * @param newPsw
+     * @param account 用户账号
+     * @param oldPsw 旧密码
+     * @param newPsw 新密码
      * @return
      */
     public boolean changePassword(String account, String oldPsw, String newPsw) {
