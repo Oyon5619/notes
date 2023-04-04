@@ -38,7 +38,7 @@ CREATE TABLE t_notes
     priority      int default 0 comment '优先级',
     notes_content text comment '错题内容',
     notes_images  text comment '错题中的图片',
-    notes_group   varchar(30) null comment '错题分组',
+    notes_group   varchar(30) default '' comment '错题分组',
     deleted       boolean default false comment '是否删除',
     update_time   date comment '更新时间',
     PRIMARY KEY (notes_id),
@@ -51,5 +51,7 @@ drop table if exists t_photo;
 CREATE TABLE t_photo
 (
     photo_id int auto_increment primary key ,
-    photo_path   text not null
+    photo_name varchar(50) not null ,
+    photo_path   text not null,
+    photo_type  varchar(10)
 )
