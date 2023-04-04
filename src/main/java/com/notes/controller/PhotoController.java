@@ -1,5 +1,6 @@
 package com.notes.controller;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.notes.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PhotoController {
     @PostMapping("/upload")
     public boolean toUpload(@RequestBody MultipartFile file, HttpServletRequest request) throws IOException {
         try{
-            String dir = request.getServletContext().getRealPath("/fileLoad/");  //存放目录
+            String dir = SpringUtil.getBean("filePath");  //存放目录
             System.out.println(dir);
             java.io.File path = new java.io.File(dir);  //确认路径存在
             if (!path.exists()) {

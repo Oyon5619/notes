@@ -1,5 +1,6 @@
 package com.notes.service;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.notes.domain.Photo;
 import com.notes.mapper.PhotoMapper;
@@ -103,7 +104,7 @@ public class PhotoService {
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request, String fileName, int fileId) {
         try {
             fileName = repeatedNaming(fileName, fileId);
-            String dir = request.getServletContext().getRealPath("/fileLoad");
+            String dir = SpringUtil.getBean("filePath");
             java.io.File file = new java.io.File(dir + java.io.File.separator + fileName);
             fileName = getFileName(request, fileName);  //对下载名进行转码
             HttpHeaders headers = new HttpHeaders();    //设置响应头
