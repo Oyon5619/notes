@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.notes.domain.Notes;
 import com.notes.mapper.NotesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class NotesService {
      * @param notesId 笔记Id
      * @return 是否插入成功
      */
+    @Cacheable("getNotesById")
     public Notes getNotesById(int notesId) {
         try {
             //TODO
@@ -73,6 +75,7 @@ public class NotesService {
     /**
      * 更新Notes
      */
+
     public Notes updateNotes(Notes notes) {
         try {
             //TODO
