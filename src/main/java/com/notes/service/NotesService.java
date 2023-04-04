@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotesService {
 
-    @Autowired
-    PhotoMapper photoMapper;
 
     @Autowired
     NotesMapper notesMapper;
