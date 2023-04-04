@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Notes {
     @TableId(type = IdType.ASSIGN_ID)
-    public int notesId; // 错题编号
-    public String notesTitle; //错题标题
-    public String promulgator; //发布者账号
-    public String category; //错题科目
-    public String priority; // 错题优先级
-    public String notesContent; //错题内容
-    public String notesImages; //错题中的图片
-    public String notesGroup; //错题分组
-    public boolean deleted; //是否删除
-    public String updateTime;//更新时间
+    private int notesId; // 错题编号
+    private String notesTitle; //错题标题
+    private String promulgator; //发布者账号
+    private String category; //错题科目
+    private String priority; // 错题优先级
+    private String notesContent; //错题内容
+    private String notesImages; //错题中的图片
+    private String notesGroup; //错题分组
+    private boolean deleted; //是否删除
+    private String updateTime;//更新时间
 }

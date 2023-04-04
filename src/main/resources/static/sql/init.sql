@@ -51,5 +51,5 @@ drop table if exists t_photo;
 CREATE TABLE t_photo
 (
     photo_id int auto_increment primary key ,
-    photo   blob null
+    photo_path   text not null
 )

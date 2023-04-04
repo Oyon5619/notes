@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @TableName("t_photo")
 public class Photo {
     @TableId(type = IdType.ASSIGN_ID)
-    public int photoId; // 错题编号
-    public byte[] photo;
+    private int photoId; // 图片Id
+    private String photoName; // 图片名称
+    private String photoPath; // 图片路劲
+    private String photoType; // 图片类型（后缀）
 }
