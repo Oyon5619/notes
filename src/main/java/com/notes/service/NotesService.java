@@ -41,7 +41,7 @@ public class NotesService {
     }
 
     /**
-     * 获取笔记详情（需要切换图片源）
+     * 获取错题详情（需要切换图片源）
      *
      * @param notesId 笔记Id
      * @return 是否插入成功
@@ -57,13 +57,13 @@ public class NotesService {
     }
 
     /**
-     * 条件获取用户笔记（用于表单显示
+     * 条件获取用户错题（用于列表显示
      *
      * @param account        当前用户账号
      * @param condition      查询条件（key包括category,content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
      * @param order          排序（0表示不排序，1表示升序，2表示降序）
      * @param orderCondition 排序条件
-     * @return 是否插入成功
+     * @return 分页结果
      */
     @Cacheable("getNotes")
     public IPage<Notes> getNotes(int account, Map<String, String> condition, int order, String orderCondition) {
@@ -79,7 +79,7 @@ public class NotesService {
      * 更新Notes
      */
     @CachePut(value = "getNotesById",key = "#notes.notesId")
-    public Notes updateNotes(Notes notes) {
+    public Notes update(Notes notes) {
         try {
             //TODO
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class NotesService {
     }
 
     /**
-     * 删除笔记
+     * 删除错题
      *
      * @return 是否删除成功
      */
@@ -104,7 +104,7 @@ public class NotesService {
     }
 
     /**
-     * 批量删除笔记(调用delete方法,用于删除缓存）
+     * 批量删除错题(调用delete方法,用于删除缓存）
      *
      * @param notesIds 要删除的notesId集合
      * @return 是否删除成功
