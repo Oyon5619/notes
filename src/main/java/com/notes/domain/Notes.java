@@ -19,7 +19,6 @@ public class Notes {
     private int notesId; // 错题编号
     private String notesTitle; //错题标题
     private String promulgator; //发布者账号
-    private String category; //错题科目
     private String priority; // 错题优先级
     private String notesContent; //错题内容
     private String notesImages; //错题中的图片

@@ -34,7 +34,6 @@ CREATE TABLE t_notes
     notes_id      int auto_increment comment '错题编号',
     notes_title   varchar(50) not null comment '错题标题',
     promulgator   varchar(30) not null comment '发布者账号',
-    category      varchar(10) not null comment '错题科目',
     priority      int default 0 comment '优先级',
     notes_content text comment '错题内容',
     notes_images  text comment '错题中的图片',

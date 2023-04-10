@@ -30,7 +30,7 @@ public class NotesController {
      * 条件获取用户错题（用于列表显示
      *
      * @param account        当前用户账号
-     * @param condition      查询条件（key包括category,content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
+     * @param condition      查询条件（key包括content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
      * @param order          排序（0表示不排序，1表示升序，2表示降序）
      * @param orderCondition 排序条件
      * @return 分页结果
@@ -77,8 +77,8 @@ public class NotesController {
      * @param selectedNotesId 要删除的notesId集合
      * @return 是否删除成功
      */
-    @DeleteMapping("/deleteSelectedNotes")
-    public boolean deleteNotes(@RequestBody List<Integer> selectedNotesId) {
+    @DeleteMapping("/multiDeleteNotes")
+    public boolean multiDeleteNotes(@RequestBody List<Integer> selectedNotesId) {
         return notesService.delete(selectedNotesId);
     }
 }

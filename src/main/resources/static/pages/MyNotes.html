@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>错题集</title>
+
+</head>
+<body>
+<link rel="stylesheet" href="../css/mainPage.css">
+<div id="app">
+    <el-main>
+        <el-form :inline="true" :model="formInLine" class="demo-form-inline">
+            <el-form-item>
+                <el-select placeholder="知识点" v-model="formInLine.tag">
+                    <el-option label="标签1" value="biaoqian1"></el-option>
+                    <el-option label="标签2" value="biaoqian2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-select placeholder="优先级" v-model="formInLine.priority">
+                    <el-option label="高优先级" value="3"></el-option>
+                    <el-option label="中优先级" value="2"></el-option>
+                    <el-option label="低优先级" value="1"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-input placeholder="关键字" v-model="formInLine.content"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="getNotes">查询</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--批量删除,新增按钮-->
+        <el-row>
+            <el-button type="danger" plain @click="multiDeleteNotes">批量删除</el-button>
+            <el-button type="primary" plain @click="addNotes">新增</el-button>
+        </el-row>
+
+
+        <el-table :data="notes"
+                  style="width: 100%"
+                  @selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column prop="notesId" label="错题编号" align="center" width="140">
+            </el-table-column>
+            <el-table-column prop="notesTitle" label="标题" align="center">
+            </el-table-column>
+            <el-table-column prop="priority" label="优先级" align="center" width="200">
+            </el-table-column>
+            <el-table-column prop="notesGroup" label="标签" align="center" width="180">
+            </el-table-column>
+            <el-table-column prop="updateTime" label="更新时间" align="center" width="200">
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="280">
+                <template slot-scope="scope">
+                    <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
+                    <el-button type="primary" size="mini" @click="uploadNotes(scope.row)">编辑</el-button>
+                    <el-button type="danger" size="mini" @click="deleteNotes(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!--分页工具条-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pagination.currentPage"
+                :page-sizes="[5, 10, 15]"
+                :page-size="5"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="pagination.total">
+        </el-pagination>
+
+    </el-main>
+</div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<link rel="stylesheet" href="../plugins/elementui/index.css">
+
+
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            //要展示的所有图书数据
+            notes: [],
+            onlineUser: null,
+            //用户信息表单
+            UserInfoData: [],
+
+            //存放复选框勾中的数据
+            multipleSelection: [],
+
+            //查询表单数据
+            formInLine: {
+                tag: '', // 标签
+                priority: '', // 优先级
+                content: '' //搜索内容
+            },
+
+            // 当前页码
+            pagination: {
+                currentPage: 1,
+                pageSize: 5,
+                total: 0
+            }
+
+
+        },
+
+        //钩子函数，VUE对象初始化完成后自动执行 /*OK*/
+        created() {
+            //调用查询全部
+            this.onlineUser = parent.app.onlineUser;
+            this.getAllNotes();
+        },
+
+        methods: {
+            //查询所有错题
+            getAllNotes() {
+                this.notes = [{notesId: 1, notesTitle: '1+1=?', priority: '高优先级', notesGroup: '超等数学', updateTime: '2023-04-10 12:34'}];
+            },
+            //条件查询错题
+            getNotes() {
+
+            },
+            detail(row) {
+
+            },
+            addNotes(){
+
+            },
+            uploadNotes(row) {
+
+            },
+            multiDeleteNotes() {
+
+            },
+            deleteNotes(row) {
+
+            },
+            <!--分页-->
+            handleSizeChange(val) { //切换当前页显示条数
+                this.pagination.pageSize = val;
+                this.getAllNotes();
+            },
+            handleCurrentChange(val) { //切换页码值
+                this.pagination.currentPage = val;
+                this.getAllNotes();
+            },
+
+            //复选框选中后执行的方法 /*OK*/
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
