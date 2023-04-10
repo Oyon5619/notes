@@ -11,9 +11,9 @@
     <el-main>
         <el-form :inline="true" :model="formInLine" class="demo-form-inline">
             <el-form-item>
-                <el-select placeholder="知识点" v-model="formInLine.tag">
-                    <el-option label="标签1" value="biaoqian1"></el-option>
-                    <el-option label="标签2" value="biaoqian2"></el-option>
+                <el-select placeholder="标签" v-model="formInLine.tag">
+                    <el-option label="标签1" value="tag1"></el-option>
+                    <el-option label="标签2" value="tag2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -41,20 +41,20 @@
 
         <el-table :data="notes"
                   style="width: 100%"
-                  @selection-change="handleSelectionChange">
-            <el-table-column
-                    type="selection"
-                    width="55">
+                  @selection-change="handleSelectionChange"
+                  stripe
+                  @sort-change="sortChange">
+            <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="notesId" label="错题编号" align="center" width="140">
             </el-table-column>
             <el-table-column prop="notesTitle" label="标题" align="center">
             </el-table-column>
-            <el-table-column prop="priority" label="优先级" align="center" width="200">
+            <el-table-column prop="priority" label="优先级" align="center" :sortable="'priority'" width="200">
             </el-table-column>
-            <el-table-column prop="notesGroup" label="标签" align="center" width="180">
+            <el-table-column prop="notesGroup" label="标签" align="center" :sortable="'notesGroup'" width="180">
             </el-table-column>
-            <el-table-column prop="updateTime" label="更新时间" align="center" width="200">
+            <el-table-column prop="updateTime" label="更新时间" align="center" :sortable="'updateTime'" width="200">
             </el-table-column>
             <el-table-column label="操作" align="center" width="280">
                 <template slot-scope="scope">
@@ -93,9 +93,6 @@
             //要展示的所有图书数据
             notes: [],
             onlineUser: null,
-            //用户信息表单
-            UserInfoData: [],
-
             //存放复选框勾中的数据
             multipleSelection: [],
 
@@ -112,8 +109,6 @@
                 pageSize: 5,
                 total: 0
             }
-
-
         },
 
         //钩子函数，VUE对象初始化完成后自动执行 /*OK*/
@@ -163,7 +158,6 @@
             }
         }
     })
-
 </script>
 </body>
 </html>
