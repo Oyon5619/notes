@@ -33,7 +33,7 @@ public class NotesService {
      */
     public boolean insert(String account,Notes notes) {
         try {
-
+            System.out.println("hello");
         } catch (Exception e) {
             e.printStackTrace();
         }
