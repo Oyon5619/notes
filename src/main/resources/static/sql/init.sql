@@ -36,13 +36,9 @@ CREATE TABLE t_notes
     promulgator   varchar(30) not null comment '发布者账号',
     priority      int default 0 comment '优先级',
     subject text comment '错题内容',
-    subject_images  text comment '错题中的图片',
-    answer text comment '错题内容',
-    answer_images  text comment '错题中的图片',
-    respond text comment '错题内容',
-    respond_images  text comment '错题中的图片',
-    notes_content text comment '错题内容',
-    content_images  text comment '错题中的图片',
+    answer text comment '标准答案',
+    respond text comment '我的答案',
+    summary text comment '错题内容',
     notes_group   varchar(30) default '' comment '错题分组',
     deleted       boolean default false comment '是否删除',
     update_time   datetime default now() comment '更新时间',
@@ -56,7 +52,7 @@ drop table if exists t_photo;
 CREATE TABLE t_photo
 (
     photo_id int auto_increment primary key ,
-    photo_name varchar(50) not null ,
-    photo_path   text not null,
+    photo_source varchar(50) not null,
+    photo_name varchar(50) not null,
     photo_type  varchar(10)
 );

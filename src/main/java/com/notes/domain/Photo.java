@@ -15,6 +15,6 @@ public class Photo {
     @TableId(type = IdType.ASSIGN_ID)
     private int photoId; // 图片Id
     private String photoName; // 图片名称
-    private String photoPath; // 图片路劲
+    private String photoSource; // 图片源
     private String photoType; // 图片类型（后缀）
 }
