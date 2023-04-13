@@ -48,7 +48,25 @@ CREATE TABLE t_notes
   DEFAULT CHARSET = utf8;
 create index index_notes_id on t_notes (notes_id ASC);
 
-drop table if exists t_photo;
+insert into t_notes( notes_title, promulgator, subject, answer, respond, summary)
+values ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
+       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
+       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
+       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
+       ('1+1=?','wangwu','1+1=2','2','1','1+1=2');
+
+
+
+    drop table if exists t_photo;
 CREATE TABLE t_photo
 (
     photo_id int auto_increment primary key ,
