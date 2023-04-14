@@ -49,7 +49,6 @@ public class NotesService {
      * @param notesId 笔记Id
      * @return 是否插入成功
      */
-    @Cacheable(value = "getNotesById",key = "#notesId")
     public Notes getNotesById(int notesId) {
         try {
             //TODO
