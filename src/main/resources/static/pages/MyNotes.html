@@ -87,7 +87,7 @@
 
 
 <script>
-    var vue = new Vue({
+    const vue = new Vue({
         el: "#app",
         data: {
             //要展示的所有图书数据
@@ -114,19 +114,19 @@
         //钩子函数，VUE对象初始化完成后自动执行 /*OK*/
         created() {
             //调用查询全部
-            this.onlineUser = parent.app.onlineUser;
+            this.onlineUser = window.parent.getOnlineUser();
             this.getAllNotes();
         },
 
         methods: {
             //查询所有错题
             getAllNotes() {
-                axios.post('/notes/getNotes',{
-                    account:this.onlineUser.account,
-                    condition:null,
-                    order:0,
-                    orderCondition:""
-                }).then(r=>{
+                axios.post('/notes/getNotes/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
+                    account: this.onlineUser.account,
+                    condition: {},
+                    order: 0,
+                    orderCondition: ""
+                }).then(r => {
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
@@ -137,7 +137,7 @@
             },
             //条件查询错题
             getNotes() {
-                axios.get('').then(r=>{
+                axios.get('').then(r => {
                     this.$message.success("搜索");
                 })
             },
@@ -145,7 +145,7 @@
                 //TODO location.href = XXX
                 this.$message.success("跳转到详情界面");
             },
-            addNotes(){
+            addNotes() {
                 //TODO location.href = XXX
                 this.$message.success("跳转到添加错题界面");
             },
@@ -165,12 +165,12 @@
                 }).then(() => {
                     //ajax发送批量删除请求
                     axios({
-                        selectedNotesId:list,
+                        selectedNotesId: list,
                         url: "/notes/multiDeleteNotes"
                     }).then((res) => {
-                        if(res.data){
+                        if (res.data) {
                             this.$message.success("删除成功");
-                        }else{
+                        } else {
                             this.$message.error("删除失败");
                         }
                     }).finally(() => {
@@ -189,10 +189,10 @@
                     type: 'warning'
                 }).then(() => {
                     //ajax发送批量删除请求
-                    axios("/notes/deleteNotes/"+row.notesId).then((res) => {
-                        if(res.data){
+                    axios("/notes/deleteNotes/" + row.notesId).then((res) => {
+                        if (res.data) {
                             this.$message.success("删除成功");
-                        }else{
+                        } else {
                             this.$message.error("删除失败");
                         }
                     }).finally(() => {
@@ -218,7 +218,7 @@
                 this.multipleSelection = val;
             }
         }
-    })
+    });
 </script>
 </body>
 </html>
