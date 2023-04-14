@@ -121,26 +121,87 @@
         methods: {
             //查询所有错题
             getAllNotes() {
+                axios.post('/notes/getNotes',{
+                    account:this.onlineUser.account,
+                    condition:null,
+                    order:0,
+                    orderCondition:""
+                }).then(r=>{
+                    this.pagination.currentPage = r.data.current;
+                    this.pagination.pageSize = r.data.size;
+                    this.pagination.total = r.data.total;
+                    this.notes = r.data.notes;
+                    this.$message.success("已完成刷新");
+                })
                 this.notes = [{notesId: 1, notesTitle: '1+1=?', priority: '高优先级', notesGroup: '超等数学', updateTime: '2023-04-10 12:34'}];
             },
             //条件查询错题
             getNotes() {
-
+                axios.get('').then(r=>{
+                    this.$message.success("搜索");
+                })
             },
             detail(row) {
-
+                //TODO location.href = XXX
+                this.$message.success("跳转到详情界面");
             },
             addNotes(){
-
+                //TODO location.href = XXX
+                this.$message.success("跳转到添加错题界面");
             },
             uploadNotes(row) {
-
+                this.$message.success("跳转到编辑错题界面");
             },
             multiDeleteNotes() {
+                var list = [];
+                for (let i = 0; i < this.multipleSelection.length; ++i) {
+                    list.push(this.multipleSelection[i].notesId);
+                }
+                //弹出警告框,让用户进行二次确认
+                this.$confirm('确认删除这些错题吗?', 'Tips', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //ajax发送批量删除请求
+                    axios({
+                        selectedNotesId:list,
+                        url: "/notes/multiDeleteNotes"
+                    }).then((res) => {
+                        if(res.data){
+                            this.$message.success("删除成功");
+                        }else{
+                            this.$message.error("删除失败");
+                        }
+                    }).finally(() => {
+                        this.getAllNotes();
+                    });
 
+                }).catch(() => {
+                    this.$message.info("已取消删除");
+                })
             },
             deleteNotes(row) {
+                //弹出警告框,让用户进行二次确认
+                this.$confirm('确认删除这些错题吗?', 'Tips', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //ajax发送批量删除请求
+                    axios("/notes/deleteNotes/"+row.notesId).then((res) => {
+                        if(res.data){
+                            this.$message.success("删除成功");
+                        }else{
+                            this.$message.error("删除失败");
+                        }
+                    }).finally(() => {
+                        this.getAllNotes();
+                    });
 
+                }).catch(() => {
+                    this.$message.info("已取消删除");
+                })
             },
             <!--分页-->
             handleSizeChange(val) { //切换当前页显示条数

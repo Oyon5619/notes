@@ -37,7 +37,7 @@ public class NotesController {
      */
     @PostMapping("/getNotes")
     public IPage<Notes> getNotes(@RequestParam("account") int account, @RequestParam("condition") Map<String, String> condition, @RequestParam("order") int order, @RequestParam("orderCondition") String orderCondition) {
-        return null;
+        return notesService.getNotes(account,condition,order,orderCondition);
     }
 
     /**
@@ -66,8 +66,8 @@ public class NotesController {
      *
      * @return 是否删除成功
      */
-    @DeleteMapping("/deleteNotes")
-    public boolean deleteNotes(@RequestBody Integer notesId) {
+    @DeleteMapping("/deleteNotes/{notesId}")
+    public boolean deleteNotes(@PathVariable Integer notesId) {
         return notesService.delete(notesId);
     }
 
