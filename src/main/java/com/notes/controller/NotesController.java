@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController("/notes")
+@RestController
+@RequestMapping("/notes")
 public class NotesController {
 
     @Autowired
@@ -29,15 +30,20 @@ public class NotesController {
     /**
      * 条件获取用户错题（用于列表显示
      *
-     * @param account        当前用户账号
-     * @param condition      查询条件（key包括content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
-     * @param order          排序（0表示不排序，1表示升序，2表示降序）
-     * @param orderCondition 排序条件
      * @return 分页结果
      */
-    @PostMapping("/getNotes")
-    public IPage<Notes> getNotes(@RequestParam("account") int account, @RequestParam("condition") Map<String, String> condition, @RequestParam("order") int order, @RequestParam("orderCondition") String orderCondition) {
-        return notesService.getNotes(account,condition,order,orderCondition);
+    @PostMapping("/getNotes/{currentPage}/{pageSize}")
+    public IPage<Notes> getNotes( @PathVariable long currentPage, @PathVariable long pageSize,@RequestBody Map<String,Object> map) {
+        String account = (String) map.get("account");
+        Map<String,String> condition = (Map<String, String>) map.get("condition");
+        int order = (int) map.get("order");
+        String orderCondition = (String) map.get("orderCondition");
+        return notesService.getNotes(currentPage,pageSize,account,condition,order,orderCondition);
+    }
+
+    @PostMapping("/test/{id}")
+    public String test(@PathVariable String id){
+        return id;
     }
 
     /**
@@ -59,7 +65,6 @@ public class NotesController {
     public Notes updateNotes(@RequestBody Notes notes) {
         return notesService.update(notes);
     }
-
 
     /**
      * 删除错题

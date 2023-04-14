@@ -130,10 +130,10 @@
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
-                    this.notes = r.data.notes;
+                    console.log(r.data)
+                    this.notes = r.data.records;
                     this.$message.success("已完成刷新");
                 })
-                this.notes = [{notesId: 1, notesTitle: '1+1=?', priority: '高优先级', notesGroup: '超等数学', updateTime: '2023-04-10 12:34'}];
             },
             //条件查询错题
             getNotes() {

@@ -1,6 +1,8 @@
 package com.notes.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.notes.domain.Notes;
 import com.notes.mapper.NotesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Map;
 
@@ -66,9 +69,16 @@ public class NotesService {
      * @return 分页结果
      */
     @Cacheable("getNotes")
-    public IPage<Notes> getNotes(int account, Map<String, String> condition, int order, String orderCondition) {
+    public IPage<Notes> getNotes(long currentPage,long pageSize, String account, Map<String, String> condition, int order, String orderCondition) {
         try {
-            //TODO
+            if(condition.isEmpty()){
+                QueryWrapper<Notes> wrapper = new QueryWrapper<>();
+                wrapper.eq("promulgator",account);
+                wrapper.eq("deleted", false);
+                IPage<Notes> page = new Page<>(currentPage, pageSize);
+                notesMapper.selectPage(page,wrapper);
+                return page;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

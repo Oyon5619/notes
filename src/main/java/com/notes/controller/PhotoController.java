@@ -10,7 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@RestController("/photo")
+@RestController
+@RequestMapping("/notes")
 public class PhotoController {
 
     @Autowired

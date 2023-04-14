@@ -1,18 +1,18 @@
 drop
-database if exists notes;
+    database if exists notes;
 create
-database notes;
+    database notes;
 use
-notes;
+    notes;
 
 create table t_user
 (
-    account   varchar(30) not null comment '账号',
-    password  varchar(30) not null comment '密码',
-    username  varchar(30) not null comment '用户名',
-    telephone varchar(30) not null comment '手机号码',
-    email     varchar(50) not null comment '邮箱',
-    user_groups    text comment '分组',
+    account     varchar(30) not null comment '账号',
+    password    varchar(30) not null comment '密码',
+    username    varchar(30) not null comment '用户名',
+    telephone   varchar(30) not null comment '手机号码',
+    email       varchar(50) not null comment '邮箱',
+    user_groups text comment '分组',
     primary key (account)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -31,46 +31,44 @@ values ('zhangsan', 'zs123456', '张三', '15915712354', 'zhangsan@163.com'),
 drop table if exists t_notes;
 CREATE TABLE t_notes
 (
-    notes_id      int auto_increment comment '错题编号',
-    notes_title   varchar(50) not null comment '错题标题',
-    promulgator   varchar(30) not null comment '发布者账号',
-    priority      int default 0 comment '优先级',
-    subject text comment '错题内容',
-    answer text comment '标准答案',
-    respond text comment '我的答案',
-    summary text comment '错题内容',
-    notes_group   varchar(30) default '' comment '错题分组',
-    deleted       boolean default false comment '是否删除',
-    update_time   datetime default now() comment '更新时间',
+    notes_id    int auto_increment comment '错题编号',
+    notes_title varchar(50) not null comment '错题标题',
+    promulgator varchar(30) not null comment '发布者账号',
+    priority    varchar(10)         default '' comment '优先级',
+    subject     text comment '错题内容',
+    answer      text comment '标准答案',
+    respond     text comment '我的答案',
+    summary     text comment '错题内容',
+    notes_group varchar(30) default '' comment '错题分组',
+    deleted     boolean     default false comment '是否删除',
+    update_time datetime    default now() comment '更新时间',
     PRIMARY KEY (notes_id),
     foreign key (promulgator) references t_user (account)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 create index index_notes_id on t_notes (notes_id ASC);
 
-insert into t_notes( notes_title, promulgator, subject, answer, respond, summary)
-values ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
-       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
-       ('1+1=?','wangwu','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','zhangsan','1+1=2','2','1','1+1=2'),
-       ('1+1=?','lisi','1+1=2','2','1','1+1=2'),
-       ('1+1=?','wangwu','1+1=2','2','1','1+1=2');
+insert into t_notes(notes_title, promulgator, subject, answer, respond, summary)
+values ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'lisi', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'lisi', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'wangwu', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'wangwu', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'wangwu', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'zhangsan', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'lisi', '1+1=2', '2', '1', '1+1=2'),
+       ('1+1=?', 'wangwu', '1+1=2', '2', '1', '1+1=2');
 
-
-
-    drop table if exists t_photo;
+drop table if exists t_photo;
 CREATE TABLE t_photo
 (
-    photo_id int auto_increment primary key ,
+    photo_id     int auto_increment primary key,
     photo_source varchar(50) not null,
-    photo_name varchar(50) not null,
-    photo_type  varchar(10)
+    photo_name   varchar(50) not null,
+    photo_type   varchar(10)
 );
