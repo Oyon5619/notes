@@ -137,8 +137,22 @@
             },
             //条件查询错题
             getNotes() {
-                axios.get('').then(r => {
-                    this.$message.success("搜索");
+                axios.post('/notes/getNotes/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
+                    account: this.onlineUser.account,
+                    condition: {
+                        notesGroup:this.formInLine.tag,
+                        priority:this.formInLine.priority,
+                        content:this.content.formInLine.content
+                    },
+                    order: 0,
+                    orderCondition: ""
+                }).then(r => {
+                    this.pagination.currentPage = r.data.current;
+                    this.pagination.pageSize = r.data.size;
+                    this.pagination.total = r.data.total;
+                    console.log(r.data)
+                    this.notes = r.data.records;
+                    this.$message.success("已完成刷新");
                 })
             },
             detail(row) {
@@ -148,9 +162,6 @@
             addNotes() {
                 //TODO location.href = XXX
                 this.$message.success("跳转到添加错题界面");
-            },
-            uploadNotes(row) {
-                this.$message.success("跳转到编辑错题界面");
             },
             multiDeleteNotes() {
                 var list = [];
