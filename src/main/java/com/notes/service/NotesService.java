@@ -53,6 +53,7 @@ public class NotesService {
     public Notes getNotesById(int notesId) {
         try {
             //TODO
+            return notesMapper.selectById(notesId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,6 +80,7 @@ public class NotesService {
                 notesMapper.selectPage(page,wrapper);
                 return page;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,6 +94,8 @@ public class NotesService {
     public Notes update(Notes notes) {
         try {
             //TODO
+            notesMapper.updateById(notes);
+            return notes;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,6 +111,10 @@ public class NotesService {
     public boolean delete(int notesId) {
         try {
             //TODO
+            Notes notes = getNotesById(notesId);
+            notes.setDeleted(true);
+            notesMapper.updateById(notes);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,6 +130,11 @@ public class NotesService {
     public boolean delete(List<Integer> notesIds) {
         try {
             //TODO
+            for (int i = 0; i < notesIds.size(); i++) {
+                Notes notes = notesMapper.selectById(notesIds.get(i));
+                notes.setDeleted(true);
+                notesMapper.updateById(notes);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,6 +149,10 @@ public class NotesService {
     public boolean restore(int notesId) {
         try {
             //TODO
+            Notes notes = notesMapper.selectById(notesId);
+            notes.setDeleted(false);
+            notesMapper.updateById(notes);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,6 +168,12 @@ public class NotesService {
     public boolean restore(List<Integer> notesIds) {
         try {
             //TODO
+            for (int i = 0; i < notesIds.size(); i++) {
+                Notes notes = notesMapper.selectById(notesIds.get(i));
+                notes.setDeleted(false);
+                notesMapper.updateById(notes);
+            }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
