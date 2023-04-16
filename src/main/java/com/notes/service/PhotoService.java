@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class PhotoService {
@@ -69,11 +70,11 @@ public class PhotoService {
     /**
      * 添加图片
      */
-    public boolean insert(String photoName, String photoPath, String photoType) {
+    public boolean insert(String photoName, String photoSource, String photoType) {
         try {
             Photo photo = new Photo();
             photo.setPhotoName(photoName);
-            photo.setPhotoPath(photoPath);
+            photo.setPhotoSource(photoSource);
             photo.setPhotoType(photoType);
             photoMapper.insert(photo);
             return true;
@@ -95,7 +96,7 @@ public class PhotoService {
                 return URLEncoder.encode(fileName, "UTF-8").replace("+", " ");
             }
         }
-        return new String(fileName.getBytes("UTF-8"), "ISO-8859-1");//其他浏览器统一为ISO-8859-1编码显示
+        return new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);//其他浏览器统一为ISO-8859-1编码显示
     }
 
     /**

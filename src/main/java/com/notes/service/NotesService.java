@@ -1,6 +1,8 @@
 package com.notes.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.notes.domain.Notes;
 import com.notes.mapper.NotesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +36,7 @@ public class NotesService {
      */
     public boolean insert(String account,Notes notes) {
         try {
-
+            System.out.println("hello");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,15 +44,15 @@ public class NotesService {
     }
 
     /**
-     * 获取笔记详情（需要切换图片源）
+     * 获取错题详情（需要切换图片源）
      *
      * @param notesId 笔记Id
      * @return 是否插入成功
      */
-    @Cacheable(value = "getNotesById",key = "#notesId")
     public Notes getNotesById(int notesId) {
         try {
             //TODO
+            return notesMapper.selectById(notesId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,18 +60,26 @@ public class NotesService {
     }
 
     /**
-     * 条件获取用户笔记（用于表单显示
+     * 条件获取用户错题（用于列表显示
      *
      * @param account        当前用户账号
-     * @param condition      查询条件（key包括category,content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
-     * @param order          排序（0表示不排序，1表示升序，2表示降序）
-     * @param orderCondition 排序条件
-     * @return 是否插入成功
+     * @param condition      查询条件（key包括content[关键字匹配标题],notesGroup,priority),条件为空则表示全查询
+     * @param order          排序（0表示不排序，1表示升序，-1表示降序）
+     * @param orderCondition 排序条件(priority,notesGroup,updateTime 其中一个)
+     * @return 分页结果
      */
     @Cacheable("getNotes")
-    public IPage<Notes> getNotes(int account, Map<String, String> condition, int order, String orderCondition) {
+    public IPage<Notes> getNotes(long currentPage,long pageSize, String account, Map<String, String> condition, int order, String orderCondition) {
         try {
-            //TODO
+            if(condition.isEmpty()){
+                QueryWrapper<Notes> wrapper = new QueryWrapper<>();
+                wrapper.eq("promulgator",account);
+                wrapper.eq("deleted", false);
+                IPage<Notes> page = new Page<>(currentPage, pageSize);
+                notesMapper.selectPage(page,wrapper);
+                return page;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,9 +90,11 @@ public class NotesService {
      * 更新Notes
      */
     @CachePut(value = "getNotesById",key = "#notes.notesId")
-    public Notes updateNotes(Notes notes) {
+    public Notes update(Notes notes) {
         try {
             //TODO
+            notesMapper.updateById(notes);
+            return notes;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,7 +102,7 @@ public class NotesService {
     }
 
     /**
-     * 删除笔记
+     * 删除错题
      *
      * @return 是否删除成功
      */
@@ -97,6 +110,10 @@ public class NotesService {
     public boolean delete(int notesId) {
         try {
             //TODO
+            Notes notes = getNotesById(notesId);
+            notes.setDeleted(true);
+            notesMapper.updateById(notes);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +121,7 @@ public class NotesService {
     }
 
     /**
-     * 批量删除笔记(调用delete方法,用于删除缓存）
+     * 批量删除错题(调用delete方法,用于删除缓存）
      *
      * @param notesIds 要删除的notesId集合
      * @return 是否删除成功
@@ -112,6 +129,11 @@ public class NotesService {
     public boolean delete(List<Integer> notesIds) {
         try {
             //TODO
+            for (int i = 0; i < notesIds.size(); i++) {
+                Notes notes = notesMapper.selectById(notesIds.get(i));
+                notes.setDeleted(true);
+                notesMapper.updateById(notes);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,6 +148,10 @@ public class NotesService {
     public boolean restore(int notesId) {
         try {
             //TODO
+            Notes notes = notesMapper.selectById(notesId);
+            notes.setDeleted(false);
+            notesMapper.updateById(notes);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,6 +167,12 @@ public class NotesService {
     public boolean restore(List<Integer> notesIds) {
         try {
             //TODO
+            for (int i = 0; i < notesIds.size(); i++) {
+                Notes notes = notesMapper.selectById(notesIds.get(i));
+                notes.setDeleted(false);
+                notesMapper.updateById(notes);
+            }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

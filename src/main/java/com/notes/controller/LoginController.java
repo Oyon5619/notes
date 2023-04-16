@@ -2,6 +2,7 @@ package com.notes.controller;
 
 import com.notes.domain.User;
 import com.notes.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 //针对用户登录的控制器
 
 @Controller
+@Slf4j
 public class LoginController {
 
     @Autowired
@@ -35,6 +37,7 @@ public class LoginController {
             model.addAttribute("telephone",user.getTelephone());
             model.addAttribute("email",user.getEmail());
             httpSession.setAttribute("onlineUser", user);
+            log.info("用户"+user.getAccount()+"登录成功");
             return "index"; //进入对应的主界面
         }
         model.addAttribute("wrong", "用户名或密码错误，请重新登录！");//设置警告信息

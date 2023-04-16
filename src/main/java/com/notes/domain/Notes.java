@@ -19,10 +19,11 @@ public class Notes {
     private int notesId; // 错题编号
     private String notesTitle; //错题标题
     private String promulgator; //发布者账号
-    private String category; //错题科目
     private String priority; // 错题优先级
-    private String notesContent; //错题内容
-    private String notesImages; //错题中的图片
+    private String subject; // 题目
+    private String answer;// 答案
+    private String respond ; // 我的答案
+    private String summary; // 总结
     private String notesGroup; //错题分组
     private boolean deleted; //是否删除
     private String updateTime;//更新时间

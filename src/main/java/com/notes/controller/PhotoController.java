@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/photo")
+@RequestMapping("/notes")
 public class PhotoController {
 
     @Autowired
