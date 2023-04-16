@@ -28,6 +28,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         patterns.add("/css/**");
         patterns.add("/js/**");
         patterns.add("/image/**");
+        patterns.add("/file/**");
+        patterns.add("/imgFile/**");
         //除了注册登录以及对应的静态资源是可以公开访问的，其他的URL都进行拦截器控制
         registry.addInterceptor(loginInterceptor).excludePathPatterns(patterns);
         registry.addInterceptor(userInfoGetter);

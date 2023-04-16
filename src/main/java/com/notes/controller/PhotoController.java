@@ -10,7 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@RestController("/photo")
+@RestController
+@RequestMapping("/photo")
 public class PhotoController {
 
     @Autowired
@@ -20,7 +21,7 @@ public class PhotoController {
     public boolean toUpload(@RequestBody MultipartFile file, HttpServletRequest request) throws IOException {
         try{
             String dir = SpringUtil.getBean("filePath");  //存放目录
-            System.out.println(dir);
+            // System.out.println(dir);
             java.io.File path = new java.io.File(dir);  //确认路径存在
             if (!path.exists()) {
                 path.mkdirs();

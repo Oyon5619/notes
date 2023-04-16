@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 
 @RestController
 public class UserController {
-
     @Resource
     UserService userService;
 
