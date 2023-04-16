@@ -1,9 +1,14 @@
 package com.notes.service;
 
+import com.notes.domain.User;
+import com.notes.mapper.NotesMapper;
+import com.notes.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+
 /**
  * 即考虑缓存，同时又要修改数据库
  * */
@@ -11,7 +16,9 @@ import org.springframework.stereotype.Service;
 public class GroupService {
 
     @Autowired
-    UserService userService;
+    UserMapper userMapper;
+    @Autowired
+    NotesMapper notesMapper;
 
     /**
      * 缓存
@@ -23,7 +30,8 @@ public class GroupService {
     @Cacheable(value = "GroupsName", key = "#account")
     public String[] getGroupsName(String account) {
         try {
-
+            User user = userMapper.selectById(account);
+            return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,6 +49,11 @@ public class GroupService {
     @CachePut(value = "GroupsName", key = "#account")
     public String[] addGroup(String account, String newGroupName) {
         try {
+            User user = userMapper.selectById(account);
+            String label = user.getUserGroups()+newGroupName+"#";
+            user.setUserGroups(label);
+            userMapper.updateById(user);
+            return label.split("#");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,9 +70,12 @@ public class GroupService {
      * @return 所有组名
      */
     @CachePut(value = "GroupsName", key = "#account")
-    public String[] updateGroup(String account, String newGroupName) {
+    public String[] updateGroup(String account,String oldGroupName, String newGroupName) {
         try {
-
+            User user = userMapper.selectById(account);
+            user.setUserGroups(user.getUserGroups().replace(oldGroupName, newGroupName));
+            userMapper.updateById(user);
+            return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,16 +95,17 @@ public class GroupService {
     @CachePut(value = "GroupsName", key = "#account")
     public String[] deleteGroup(String account, String groupName) {
         try {
-
+            notesMapper.deleteGroup(groupName);
+            User user = userMapper.selectById(account);
+            groupName += "#";
+            String group = user.getUserGroups();
+            user.setUserGroups(group.replace(groupName,""));
+            userMapper.updateById(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
-
-
 
 
 }
