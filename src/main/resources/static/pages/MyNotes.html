@@ -132,7 +132,6 @@
                     this.pagination.total = r.data.total;
                     console.log(r.data)
                     this.notes = r.data.records;
-                    this.$message.success("已完成刷新");
                 })
             },
             //条件查询错题
@@ -200,7 +199,7 @@
                     type: 'warning'
                 }).then(() => {
                     //ajax发送批量删除请求
-                    axios("/notes/deleteNotes/" + row.notesId).then((res) => {
+                    axios.delete('/notes/deleteNotes/' + row.notesId).then((res) => {
                         if (res.data) {
                             this.$message.success("删除成功");
                         } else {
