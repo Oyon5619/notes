@@ -49,7 +49,6 @@ public class NotesService {
      * @param notesId 笔记Id
      * @return 是否插入成功
      */
-    @Cacheable(value = "getNotesById",key = "#notesId")
     public Notes getNotesById(int notesId) {
         try {
             //TODO
@@ -80,7 +79,20 @@ public class NotesService {
                 notesMapper.selectPage(page,wrapper);
                 return page;
             }
-
+            else {
+                QueryWrapper<Notes> wrapper = new QueryWrapper<>();
+                wrapper.eq("promulgator",account);
+                wrapper.eq("deleted", false);
+                if (!condition.get("priority").isEmpty())
+                    wrapper.eq("priority", condition.get("priority"));
+                if (!condition.get("notesGroup").isEmpty())
+                    wrapper.eq("notesGroup", condition.get("notesGroup"));
+                if (!condition.get("content").isEmpty())
+                    wrapper.like("notes_title", "%"+condition.get("content")+"%");
+                IPage<Notes> page = new Page<>(currentPage, pageSize);
+                notesMapper.selectPage(page,wrapper);
+                return page;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
