@@ -66,6 +66,7 @@ public class GroupService {
      * 更新组名
      *
      * @param account      当前用户账号
+     * @param oldGroupName  原组名
      * @param newGroupName 更新组名
      * @return 所有组名
      */

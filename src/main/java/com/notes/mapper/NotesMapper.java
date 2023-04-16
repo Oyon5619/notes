@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Update;
 public interface NotesMapper extends BaseMapper<Notes> {
     @Update("update t_notes set notes_group='' where notes_group=#{groupName}")
     void deleteGroup(String groupName);
+
 }
