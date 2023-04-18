@@ -6,7 +6,7 @@
 
 </head>
 <body>
-<link rel="stylesheet" href="../css/mainPage.css">
+
 <div id="app">
     <el-main>
         <el-form :inline="true" :model="formInLine" class="demo-form-inline">
@@ -159,7 +159,7 @@
                 this.$message.success("跳转到详情界面");
             },
             addNotes() {
-                //TODO location.href = XXX
+                location.href = "http://localhost:8080/pages/add.html"
                 this.$message.success("跳转到添加错题界面");
             },
             multiDeleteNotes() {

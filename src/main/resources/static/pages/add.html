@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../plugins/elementui/index.css">
+        <title>添加错题</title>
+    </head>
+
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/wangeditor.min.js"></script>
+
+    <body>
+        <div id="add">
+            <h1>新增错题页面</h1>
+            <!-- 错题内容 -->
+            <div id="subject"></div>
+            <!-- 我的答案 -->
+            <div id="respond"></div>
+            <!-- 标准答案 -->
+            <div id="answer"></div>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        const E = window.wangEditor
+        // 创建四个富文本编辑器
+        const subjectEditor = new E('#subject')
+
+        subjectEditor.create();
+
+        var v = new Vue({
+            el: '#add',
+            data() {
+                return {
+
+                }
+            }
+        })
+    </script>
+</html>
