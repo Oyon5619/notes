@@ -42,8 +42,7 @@
         <el-table :data="notes"
                   style="width: 100%"
                   @selection-change="handleSelectionChange"
-                  stripe
-                  @sort-change="sortChange">
+                  stripe>
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="notesId" label="错题编号" align="center" width="140">
@@ -59,7 +58,7 @@
             <el-table-column label="操作" align="center" width="280">
                 <template slot-scope="scope">
                     <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
-                    <el-button type="primary" size="mini" @click="uploadNotes(scope.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" @click="editNotes(scope.row)">编辑</el-button>
                     <el-button type="danger" size="mini" @click="deleteNotes(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -84,6 +83,7 @@
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
 <link rel="stylesheet" href="../plugins/elementui/index.css">
+<script src="../plugins/elementui/index.js"></script>
 
 
 <script>
@@ -134,6 +134,11 @@
                     this.notes = r.data.records;
                 })
             },
+            // 编辑单个错题
+            editNotes(row) {
+                localStorage.setItem('curRowId', row.notesId)
+                location.href = 'http://localhost:8080/pages/edit.html'
+            },
             //条件查询错题
             getNotes() {
                 axios.post('/notes/getNotes/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
@@ -155,8 +160,9 @@
                 })
             },
             detail(row) {
-                //TODO location.href = XXX
-                this.$message.success("跳转到详情界面");
+                localStorage.setItem('curRowId', row.notesId)
+                location.href = "http://localhost:8080/pages/notesDetail.html"
+                this.$message.success("跳转到详情界面")
             },
             addNotes() {
                 location.href = "http://localhost:8080/pages/add.html"
@@ -175,7 +181,8 @@
                 }).then(() => {
                     //ajax发送批量删除请求
                     axios({
-                        selectedNotesId: list,
+                        data: list,
+                        method: 'DELETE',
                         url: "/notes/multiDeleteNotes"
                     }).then((res) => {
                         if (res.data) {
@@ -193,7 +200,7 @@
             },
             deleteNotes(row) {
                 //弹出警告框,让用户进行二次确认
-                this.$confirm('确认删除这些错题吗?', 'Tips', {
+                this.$confirm('确认删除这个错题吗?', 'Tips', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

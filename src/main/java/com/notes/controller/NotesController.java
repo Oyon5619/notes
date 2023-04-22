@@ -24,7 +24,7 @@ public class NotesController {
      */
     @GetMapping("/getNotesById/{notesId}")
     public Notes getNotesById(@PathVariable String notesId) {
-        return null;
+        return notesService.getNotesById(Integer.parseInt(notesId));
     }
 
     /**
@@ -33,7 +33,7 @@ public class NotesController {
      * @return 分页结果
      */
     @PostMapping("/getNotes/{currentPage}/{pageSize}")
-    public IPage<Notes> getNotes( @PathVariable long currentPage, @PathVariable long pageSize,@RequestBody Map<String,Object> map) {
+    public IPage<Notes> getNotes(@PathVariable long currentPage, @PathVariable long pageSize,@RequestBody Map<String,Object> map) {
         String account = (String) map.get("account");
         Map<String,String> condition = (Map<String, String>) map.get("condition");
         int order = (int) map.get("order");
@@ -54,7 +54,8 @@ public class NotesController {
      * @return 是否插入成功
      */
     @PostMapping("/addNotes")
-    public boolean addNotes(@RequestParam("account") String account, @RequestParam("notes") Notes notes) {
+    public boolean addNotes(@RequestParam("account") String account, @RequestBody Notes notes) {
+        System.out.println(notes);
         return notesService.insert(account, notes);
     }
 

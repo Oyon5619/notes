@@ -30,7 +30,6 @@ public class FileController {
         String suffix = orgName.substring(orgName.lastIndexOf("."));
         // 使用UUID生成文件名 防止文件名重复造成文件名覆盖
         String newName = UUID.randomUUID().toString() + suffix;
-
         // 判断目录是否存在
         File dir = new File(uploadPath);
         if (!dir.exists()) dir.mkdir();
@@ -44,7 +43,7 @@ public class FileController {
             e.printStackTrace();
         }
 
-        // 返回图片与虚拟地
+        // 返回图片映射地址
         Map<String, Object> result = new HashMap<>();
         result.put("code", 0);
         result.put("url", "http://localhost:8080/imgFile/" + newName);

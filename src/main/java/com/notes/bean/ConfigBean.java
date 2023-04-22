@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * 存放项目相关的Bean对象
  * */
-@Component
+// @Component
 public class ConfigBean {
 
     @Value("${file.uploadPath}")

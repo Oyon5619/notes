@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // 跨域过滤器
-// @WebFilter(urlPatterns = "/*", filterName = "CorsFilter")
+@WebFilter(urlPatterns = "/*", filterName = "CorsFilter")
 public class CorsFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -17,7 +17,7 @@ public class CorsFilter implements Filter {
             throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
-        System.out.println("got: "+request.getHeader("Origin"));
+//        System.out.println("got: "+request.getHeader("Origin"));
         if(request.getHeader("Origin") == null || request.getHeader("Origin").toString().trim().isEmpty()){
             response.setHeader("Access-Control-Allow-Origin", "*");
         }else{

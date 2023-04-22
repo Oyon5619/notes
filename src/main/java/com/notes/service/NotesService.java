@@ -21,7 +21,6 @@ import java.util.Map;
 @Service
 public class NotesService {
 
-
     @Autowired
     NotesMapper notesMapper;
 
@@ -34,13 +33,14 @@ public class NotesService {
      * @param notes 待插入的笔记
      * @return 是否插入成功
      */
-    public boolean insert(String account,Notes notes) {
+    public boolean insert(String account, Notes notes) {
+        int count = 0;
         try {
-            System.out.println("hello");
+            count = notesMapper.insert(notes);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return count != 0;
     }
 
     /**
@@ -51,7 +51,6 @@ public class NotesService {
      */
     public Notes getNotesById(int notesId) {
         try {
-            //TODO
             return notesMapper.selectById(notesId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,8 +67,10 @@ public class NotesService {
      * @param orderCondition 排序条件(priority,notesGroup,updateTime 其中一个)
      * @return 分页结果
      */
-    @Cacheable("getNotes")
-    public IPage<Notes> getNotes(long currentPage,long pageSize, String account, Map<String, String> condition, int order, String orderCondition) {
+    // @Cacheable("getNotes")
+    public IPage<Notes> getNotes(long currentPage,long pageSize,
+                                 String account, Map<String, String> condition,
+                                 int order, String orderCondition) {
         try {
             if(condition.isEmpty()){
                 QueryWrapper<Notes> wrapper = new QueryWrapper<>();
