@@ -3,14 +3,17 @@ package com.notes.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.notes.domain.Notes;
 import com.notes.service.NotesService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/notes")
+@Slf4j
 public class NotesController {
 
     @Autowired
@@ -38,6 +41,7 @@ public class NotesController {
         Map<String,String> condition = (Map<String, String>) map.get("condition");
         int order = (int) map.get("order");
         String orderCondition = (String) map.get("orderCondition");
+        log.info("[getNotes] condition = {}", condition);
         return notesService.getNotes(currentPage,pageSize,account,condition,order,orderCondition);
     }
 
