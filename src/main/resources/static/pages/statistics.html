@@ -8,19 +8,215 @@
     <script src="../js/vue.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
     <script src="../plugins/elementui/index.js"></script>
+    <script src="../js/echarts.min.js"></script>
 
 </head>
     <body>
         <div id="statistics">
-
+            <!-- 错题发布总数 -->
+            <div id="totalView">
+                当前平台错题发布总数: {{ notesTotalNum }}
+            </div>
+            <hr/>
+            <!-- 各个标签的占比 (饼图) -->
+            <div class="view-title" id="tagViewTitle">题目标签占比统计</div>
+            <div id="tagView" class="subDiv"></div>
+            <hr/>
+            <!-- 近几次发布数量 (折线图) (默认为最近五次 选项分 三 五 七)-->
+            <div class="view-title" id="publishViewTitle">最近几次发布题量统计(按日期计)</div>
+            <div id="publishView" class="subDiv"></div>
+            <hr/>
+            <!-- 各个优先级的数量占比 (柱形图) (低/中/高) -->
+            <div class="view-title" id="priorityViewTitle">各优先级题量统计</div>
+            <div id="priorityView" class="subDiv"></div>
         </div>
     </body>
     <script type="text/javascript">
+
         var v = new Vue({
             el: '#statistics',
             data() {
                 return {
+                    notesTotalNum: 0, // 题目总量,
+                    tagView: '',
+                    publishView: '',
+                    priorityView: '',
+                    tagViewOption: {},
+                    publishViewOption: {},
+                    priorityViewOption: {},
+                    tagViewData: {
+                        seriesData: []
+                    },
+                    publishViewData: {
+                        xAxisData: [],
+                        seriesData: []
+                    },
+                    priorityViewData: {
+                        xAxisData: ['低优先级', '中优先级', '高优先级'],
+                        seriesData: []
+                    }
+                }
+            },
+            created() {},
+            mounted() {
+                this.initAllView();
+            },
+            methods: {
+                initAllView() {
+                    // 初始化echarts实例
+                    this.tagView = echarts.init(document.querySelector('#tagView'));
+                    this.publishView = echarts.init(document.querySelector('#publishView'));
+                    this.priorityView = echarts.init(document.querySelector('#priorityView'))
 
+                    this.tagView.showLoading();
+                    this.priorityView.showLoading();
+                    this.publishView.showLoading();
+
+                    // 加载ajax数据 并指定的配置项和数据显示图表
+                    this.getTotalNum();
+                    this.getTagViewStatisticData();
+                    this.getPriorityViewStatisticData();
+                    this.getPublishViewStatisticData();
+                },
+                // 获取标签统计 优先级统计 日期统计
+                getTagViewStatisticData() {
+                    axios({
+                        method: 'get',
+                        url: '/statistic/notesGroup'
+                    }).then(res => {
+                        // console.log(res.data);
+                        let mp = new Map(Object.entries(res.data));
+                        this.tagViewData.seriesData = [];
+                        for (let k of mp) {
+                            this.tagViewData.seriesData.push({ name: k[0], value: k[1] });
+                        }
+                        console.log(this.tagViewData.seriesData);
+
+                        // 指定图表的配置项和数据
+                        this.tagViewOption = {
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: '{a} <br/>{b} : {c} ({d}%)'
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            series: [
+                                {
+                                    name: '标签数量占比',
+                                    type: 'pie',
+                                    radius: '70%',
+                                    data: this.tagViewData.seriesData
+                                }
+                            ]
+                        };
+
+                        this.tagView.setOption(this.tagViewOption);
+                        this.tagView.hideLoading();
+                    });
+                },
+                getPriorityViewStatisticData() {
+                    axios({
+                        method: 'get',
+                        url: '/statistic/notesPriority',
+                    }).then(res => {
+                        console.log(res.data);
+                        let mp = new Map(Object.entries(res.data));
+
+                        this.priorityViewData.seriesData = [];
+                        for (let k of mp) {
+                            this.priorityViewData.seriesData.push(k[1]);
+                        }
+
+                        this.priorityViewOption = {
+                            tooltip: {},
+                            legend: {
+                                data: ['销量']
+                            },
+                            xAxis: {
+                                axisLabel: {
+                                    fontSize: 20
+                                },
+                                data: this.priorityViewData.xAxisData
+                            },
+                            yAxis: {
+                                axisLabel: {
+                                    fontSize: 20
+                                }
+                            },
+                            series: [
+                                {
+                                    name: '数量',
+                                    type: 'bar',
+                                    data: this.priorityViewData.seriesData
+                                }
+                            ]
+                        };
+
+                        this.priorityView.setOption(this.priorityViewOption);
+                        this.priorityView.hideLoading();
+                    });
+                },
+                getPublishViewStatisticData() {
+                    axios({
+                        method: 'get',
+                        url: '/statistic/notesPublishDate'
+                    }).then(res => {
+                        console.log(res.data);
+                        let mp = new Map(Object.entries(res.data));
+
+                        this.publishViewData.xAxisData = [];
+                        this.publishViewData.seriesData = [];
+
+                        for (let k of mp) {
+                            this.publishViewData.xAxisData.unshift(k[0]);
+                            this.publishViewData.seriesData.unshift(k[1]);
+                        }
+
+                        this.publishViewOption = {
+                            tooltip: {},
+                            legend: {
+                                data: ['销量']
+                            },
+                            xAxis: {
+                                axisLabel: {
+                                    fontSize: 20
+                                },
+                                data: this.publishViewData.xAxisData
+                            },
+                            yAxis: {
+                                axisLabel: {
+                                    fontSize: 20
+                                }
+                            },
+                            series: [
+                                {
+                                    name: '数量',
+                                    type: 'line',
+                                    data: this.publishViewData.seriesData,
+                                    areaStyle: {
+                                        color: '#30ac90',
+                                        opacity: 0.5
+                                    }
+                                }
+                            ]
+                        }
+
+                        this.publishView.setOption(this.publishViewOption);
+                        this.publishView.hideLoading();
+                    });
+                },
+                getTotalNum() {
+                    axios({
+                        method: 'get',
+                        url: '/statistic/totalNum'
+                    }).then(res => {
+                        this.notesTotalNum = res.data;
+                    })
                 }
             }
         })

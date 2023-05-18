@@ -17,12 +17,11 @@
                 <el-input placeholder="标签" v-model="formInLine.tag"></el-input>
             </el-form-item>
             <el-form-item>
-<!--                <el-select placeholder="优先级" v-model="formInLine.priority">-->
-<!--                    <el-option label="高优先级" value="3"></el-option>-->
-<!--                    <el-option label="中优先级" value="2"></el-option>-->
-<!--                    <el-option label="低优先级" value="1"></el-option>-->
-<!--                </el-select>-->
-                <el-input placeholder="优先级" v-model="formInLine.priority"></el-input>
+                <el-select placeholder="优先级" v-model="formInLine.priority">
+                    <el-option label="高优先级" value="3"></el-option>
+                    <el-option label="中优先级" value="2"></el-option>
+                    <el-option label="低优先级" value="1"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item>
                 <el-input placeholder="关键字" v-model="formInLine.content"></el-input>

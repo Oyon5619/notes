@@ -1,5 +1,8 @@
 package com.notes.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +91,7 @@ public class NotesService {
                 if (!condition.get("priority").isEmpty())
                     wrapper.eq("priority", condition.get("priority"));
                 if (!condition.get("notesGroup").isEmpty())
-                    wrapper.eq("notesGroup", condition.get("notesGroup"));
+                    wrapper.eq("notes_group", condition.get("notesGroup"));
                 if (!condition.get("content").isEmpty())
                     wrapper.like("notes_title", "%"+condition.get("content")+"%");
                 IPage<Notes> page = new Page<>(currentPage, pageSize);
@@ -191,5 +195,83 @@ public class NotesService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Map<Object, Object> getNotesGroupStatistic() {
+        // SELECT notes_group, COUNT(notes_group) FROM t_notes GROUP BY notes_group;
+        try {
+            QueryWrapper<Notes> qw = new QueryWrapper<>();
+            qw.select("DISTINCT notes_group");
+            List<Object> notesGroupColumn = notesMapper.selectObjs(qw);
+            qw.clear();
+            qw.select("COUNT(notes_group)").groupBy("notes_group");
+            List<Object> notesGroupColumnCount = notesMapper.selectObjs(qw);
+
+            Map<Object, Object> resMap = new HashMap<>();
+
+            for (int i = 0; i < notesGroupColumn.size(); ++i) {
+                resMap.put(notesGroupColumn.get(i), notesGroupColumnCount.get(i));
+            }
+            return resMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Map<Object, Object> getNotesPriorityStatistic() {
+        // SELECT priority, COUNT(priority) FROM t_notes GROUP BY priority ORDER BY priority ASC;
+        try {
+            QueryWrapper<Notes> qw = new QueryWrapper<>();
+            qw.select("DISTINCT priority").orderByAsc("priority");
+            List<Object> notesPriorityColumn = notesMapper.selectObjs(qw);
+            qw.clear();
+            qw.select("COUNT(priority)").groupBy("priority").orderByAsc("priority");
+            List<Object> notesPriorityColumnCount = notesMapper.selectObjs(qw);
+
+            Map<Object, Object> resMap = new HashMap<>();
+            for (int i = 0; i < notesPriorityColumn.size(); ++i) {
+                resMap.put(notesPriorityColumn.get(i), notesPriorityColumnCount.get(i));
+            }
+            return resMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getNotesPublishDateStatistic(Integer count) {
+        // SELECT DATE_FORMAT(update_time,'%Y-%m-%d'), COUNT(DATE_FORMAT(update_time,'%Y-%m-%d')) FROM t_notes GROUP BY DATE_FORMAT(update_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(update_time,'%Y-%m-%d') DESC LIMIT #{count};
+        try {
+            String updateDate = "DATE_FORMAT(update_time,'%Y-%m-%d')";
+            String lastSql = count == null ? "LIMIT 5" : "LIMIT " + count; // 默认为最近五次
+            QueryWrapper<Notes> qw = new QueryWrapper<>();
+            qw.select("DISTINCT " + updateDate).orderByDesc(updateDate).last(lastSql);
+            List<Object> notesPublishDateColumn = notesMapper.selectObjs(qw);
+            qw.clear();
+            qw.select("COUNT(" + updateDate + ")").groupBy(updateDate).orderByDesc(updateDate).last(lastSql);
+            List<Object> notesPublishDateColumnCount = notesMapper.selectObjs(qw);
+
+            String resJson = "{";
+            int i = 0;
+            for (; i < notesPublishDateColumn.size() - 1; ++i) {
+                resJson += "\"" + notesPublishDateColumn.get(i) + "\":" + notesPublishDateColumnCount.get(i) + ",";
+            }
+            resJson += "\"" + notesPublishDateColumn.get(i) + "\":" + notesPublishDateColumnCount.get(i) + "}";
+            // System.out.println(resJson);
+            return resJson;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Integer getTotalNumStatistic() {
+        try {
+            return notesMapper.selectCount(null);
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return -1;
     }
 }

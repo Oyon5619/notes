@@ -28,7 +28,11 @@
                         <el-input v-model="notes.notesTitle" placeholder="输入错题标题..."></el-input>
                     </el-form-item>
                     <el-form-item label="优先级" prop="priority">
-                        <el-input v-model="notes.priority" placeholder="输入错题优先级.."></el-input>
+                        <el-select placeholder="选择错题优先级.." v-model="notes.priority">
+                            <el-option label="高优先级" value="3"></el-option>
+                            <el-option label="中优先级" value="2"></el-option>
+                            <el-option label="低优先级" value="1"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="分组" prop="notesGroup">
                         <el-input v-model="notes.notesGroup" placeholder="输入分组..."></el-input>

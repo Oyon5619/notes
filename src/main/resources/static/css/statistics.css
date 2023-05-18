@@ -1,0 +1,90 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+#statistics {
+    box-sizing: border-box;
+    overflow: auto;
+    background: #eee;
+    padding: 10px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.view-title {
+    box-sizing: border-box;
+    margin: 15px;
+    padding-left: 20px;
+    font-family: '幼圆';
+    line-height: 80px;
+    color: #003558;
+    font-size: 45px;
+    background: #ccc;
+}
+
+#tagViewTitle {
+    border-left: 15px solid #4ec37d;
+}
+
+#publishViewTitle {
+    border-left: 15px solid #dd4938;
+}
+
+#priorityViewTitle {
+    border-left: 15px solid #55f7e8;
+}
+
+#statistics #totalView {
+    text-align: center;
+    margin: 30px auto;
+    font-family: '幼圆';
+    background: #fff;
+    font-weight: bolder;
+    width: 80%;
+    border: 2px solid #409eff;
+    border-radius: 0.3em;
+    font-size: 50px;
+    line-height: 100px;
+}
+
+hr {
+    margin: 10px 0;
+}
+
+#statistics .subDiv {
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+#statistics #tagView {
+    background: #fff;
+    border-radius: 1em;
+    margin: 0 auto;
+    border: 5px solid #000;
+    width: 750px;
+    height: 750px;
+}
+
+#statistics #publishView {
+    background: #fff;
+    margin: 0 auto;
+    border-radius: 1em;
+    border: 5px solid #000;
+    width: 1000px;
+    height: 600px;
+}
+
+#statistics #priorityView {
+    border-radius: 1em;
+    background: #fff;
+    margin: 0 auto;
+    border: 5px solid #000;
+    width: 700px;
+    height: 600px;
+}
