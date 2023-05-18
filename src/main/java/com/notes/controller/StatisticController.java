@@ -39,11 +39,12 @@ public class StatisticController {
         return notesService.getNotesPriorityStatistic();
     }
 
-    // 获取根据优先级分组统计出来的题目数据
+    // 获取根据日期分组统计出来的题目数据 (用户个人向)
     @GetMapping("/notesPublishDate")
-    public String getNotesPublishDateStatistic(@RequestParam(value = "count", required = false) Integer count) {
-        log.info("[getNotesPriorityStatistic]");
-        return notesService.getNotesPublishDateStatistic(count);
+    public String getNotesPublishDateStatistic(@RequestParam("promulgator") String promulgator,
+                                               @RequestParam(value = "count", required = false) Integer count) {
+        log.info("[getNotesPriorityStatistic] promulgator = {}", promulgator);
+        return notesService.getNotesPublishDateStatistic(promulgator, count);
     }
 
 }

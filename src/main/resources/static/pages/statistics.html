@@ -15,19 +15,19 @@
         <div id="statistics">
             <!-- 错题发布总数 -->
             <div id="totalView">
-                当前平台错题发布总数: {{ notesTotalNum }}
+                当前平台错题总发布数: {{ notesTotalNum }}
             </div>
             <hr/>
             <!-- 各个标签的占比 (饼图) -->
-            <div class="view-title" id="tagViewTitle">题目标签占比统计</div>
+            <div class="view-title" id="tagViewTitle">全平台题目标签占比统计</div>
             <div id="tagView" class="subDiv"></div>
             <hr/>
             <!-- 近几次发布数量 (折线图) (默认为最近五次 选项分 三 五 七)-->
-            <div class="view-title" id="publishViewTitle">最近几次发布题量统计(按日期计)</div>
+            <div class="view-title" id="publishViewTitle">我的最近几次发布题量统计(按日期计)</div>
             <div id="publishView" class="subDiv"></div>
             <hr/>
             <!-- 各个优先级的数量占比 (柱形图) (低/中/高) -->
-            <div class="view-title" id="priorityViewTitle">各优先级题量统计</div>
+            <div class="view-title" id="priorityViewTitle">全平台各优先级题量统计</div>
             <div id="priorityView" class="subDiv"></div>
         </div>
     </body>
@@ -164,7 +164,10 @@
                 getPublishViewStatisticData() {
                     axios({
                         method: 'get',
-                        url: '/statistic/notesPublishDate'
+                        url: '/statistic/notesPublishDate',
+                        params: {
+                            promulgator: window.parent.getOnlineUser().account
+                        }
                     }).then(res => {
                         console.log(res.data);
                         let mp = new Map(Object.entries(res.data));
