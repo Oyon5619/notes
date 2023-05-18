@@ -45,22 +45,17 @@ public class NotesController {
         return notesService.getNotes(currentPage,pageSize,account,condition,order,orderCondition);
     }
 
-    @PostMapping("/test/{id}")
-    public String test(@PathVariable String id){
-        return id;
-    }
-
     /**
      * 插入数据
      *
-     * @param account 发布者账号（当前用户）
      * @param notes   待插入的笔记
      * @return 是否插入成功
      */
     @PostMapping("/addNotes")
-    public boolean addNotes(@RequestParam("account") String account, @RequestBody Notes notes) {
+    public boolean addNotes(@RequestBody Notes notes) {
+        log.info("account--->"+notes.getPromulgator());
         System.out.println(notes);
-        return notesService.insert(account, notes);
+        return notesService.insert(notes);
     }
 
     /**

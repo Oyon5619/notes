@@ -1,7 +1,5 @@
 package com.notes.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.notes.domain.Notes;
 import com.notes.service.NotesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

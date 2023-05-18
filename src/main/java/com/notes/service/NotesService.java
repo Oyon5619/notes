@@ -33,11 +33,10 @@ public class NotesService {
 
     /**
      * 插入数据
-     * @param account 发布者账号（当前用户）
      * @param notes 待插入的笔记
      * @return 是否插入成功
      */
-    public boolean insert(String account, Notes notes) {
+    public boolean insert(Notes notes) {
         int count = 0;
         try {
             count = notesMapper.insert(notes);
@@ -107,7 +106,6 @@ public class NotesService {
     /**
      * 更新Notes
      */
-    @CachePut(value = "getNotesById",key = "#notes.notesId")
     public Notes update(Notes notes) {
         try {
             //TODO
@@ -124,7 +122,6 @@ public class NotesService {
      *
      * @return 是否删除成功
      */
-    @CacheEvict(value = "getNotesById",key = "#notesId")
     public boolean delete(int notesId) {
         try {
             //TODO
