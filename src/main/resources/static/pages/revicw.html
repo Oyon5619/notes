@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>复习计划</title>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-form :inline="true" :model="formInLine">
+            <el-form-item>
+                <el-select placeholder="时间间隔" v-model="formInLine.tag">
+                    <el-option :label="item" :value="item" v-for="item in tagList" :key="item"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-select placeholder="优先级" v-model="formInLine.priority">
+                    <el-option label="高优先级" value="3"></el-option>
+                    <el-option label="中优先级" value="2"></el-option>
+                    <el-option label="低优先级" value="1"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-input placeholder="关键字" v-model="formInLine.content"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="getNotes">查询</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--批量删除,新增按钮-->
+        <el-row>
+            <el-button type="danger" plain @click="multiDeleteNotes">批量删除</el-button>
+            <el-button type="primary" plain @click="addNotes">新增</el-button>
+            <el-button type="success" plain @click="dialogVisible4Tag=true;getGroups">我的标签</el-button>
+        </el-row>
+
+
+        <el-table :data="notes"
+                  style="width: 100%"
+                  @selection-change="handleSelectionChange"
+                  stripe>
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column prop="notesId" label="错题编号" align="center" width="140">
+            </el-table-column>
+            <el-table-column prop="notesTitle" label="标题" align="center">
+            </el-table-column>
+            <el-table-column prop="priority" label="优先级" align="center" :sortable="'priority'" width="200">
+            </el-table-column>
+            <el-table-column prop="notesGroup" label="标签" align="center" :sortable="'notesGroup'" width="180">
+            </el-table-column>
+            <el-table-column prop="updateTime" label="更新时间" align="center" :sortable="'updateTime'" width="200">
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="280">
+                <template slot-scope="scope">
+                    <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
+                    <el-button type="primary" size="mini" @click="editNotes(scope.row)">编辑</el-button>
+                    <el-button type="danger" size="mini" @click="deleteNotes(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!--分页工具条-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pagination.currentPage"
+                :page-sizes="[5, 10, 15]"
+                :page-size="5"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="pagination.total">
+        </el-pagination>
+
+    </el-main>
+
+</div>
+<script src="../js/vue.js"></script>
+<script src="../js/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<link rel="stylesheet" href="../css/notes.css">
+<link rel="stylesheet" href="../plugins/elementui/index.css">
+<script src="../plugins/elementui/index.js"></script>
+<script>
+    const vue = new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        created() {
+
+        }
+    });
+</script>
+</body>
+</html>
