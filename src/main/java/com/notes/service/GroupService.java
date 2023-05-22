@@ -102,6 +102,7 @@ public class GroupService {
             String group = user.getUserGroups();
             user.setUserGroups(group.replace(groupName,""));
             userMapper.updateById(user);
+            return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
         }
