@@ -213,6 +213,7 @@
                 this.feedback.email = this.onlineUser.email;
                 this.feedback.telephone = this.onlineUser.telephone;
                 this.feedbackDialog = false;
+                this.$message.info("邮件发送中…………");
                 axios.post('/sendFeedback',this.feedback).then(res=>{
                     if(res.data){
                         this.$notify({
@@ -220,6 +221,7 @@
                             message: '反馈信息发送成功，请留意您的邮箱和手机短信',
                             type: 'success'
                         });
+                        this.resetForm();
                     }
                 })
             }
