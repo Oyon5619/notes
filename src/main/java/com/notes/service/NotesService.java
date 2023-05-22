@@ -237,16 +237,16 @@ public class NotesService {
         return null;
     }
 
-    public String getNotesPublishDateStatistic(Integer count) {
-        // SELECT DATE_FORMAT(update_time,'%Y-%m-%d'), COUNT(DATE_FORMAT(update_time,'%Y-%m-%d')) FROM t_notes GROUP BY DATE_FORMAT(update_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(update_time,'%Y-%m-%d') DESC LIMIT #{count};
+    public String getNotesPublishDateStatistic(String promulgator, Integer count) {
+        // SELECT DATE_FORMAT(update_time,'%Y-%m-%d'), COUNT(DATE_FORMAT(update_time,'%Y-%m-%d')) FROM t_notes WHERE promulgator = ? GROUP BY DATE_FORMAT(update_time,'%Y-%m-%d') ORDER BY DATE_FORMAT(update_time,'%Y-%m-%d') DESC LIMIT #{count};
         try {
             String updateDate = "DATE_FORMAT(update_time,'%Y-%m-%d')";
             String lastSql = count == null ? "LIMIT 5" : "LIMIT " + count; // 默认为最近五次
             QueryWrapper<Notes> qw = new QueryWrapper<>();
-            qw.select("DISTINCT " + updateDate).orderByDesc(updateDate).last(lastSql);
+            qw.select("DISTINCT " + updateDate).eq("promulgator", promulgator).orderByDesc(updateDate).last(lastSql);
             List<Object> notesPublishDateColumn = notesMapper.selectObjs(qw);
             qw.clear();
-            qw.select("COUNT(" + updateDate + ")").groupBy(updateDate).orderByDesc(updateDate).last(lastSql);
+            qw.select("COUNT(" + updateDate + ")").eq("promulgator", promulgator).groupBy(updateDate).orderByDesc(updateDate).last(lastSql);
             List<Object> notesPublishDateColumnCount = notesMapper.selectObjs(qw);
 
             String resJson = "{";
