@@ -42,6 +42,7 @@
             <li><a href="javascript:app.changeFrame('trash')"><i class="fa fa-trash"></i>回收站</a></li>
         </ul>
         <ul id="bottom">
+            <li><a href="javascript:app.openFeedbackDialog()"><i class="fa fa fa-sun-o"></i>意见反馈</a></li>
             <li><a href="javascript:app.openChangePasswordDialog()"><i class="fa fa fa-sun-o"></i>修改密码</a></li>
             <li><a href="javascript:app.logout()"><i class="fa fa fa-power-off"></i>退出登录</a></li>
         </ul>
@@ -79,6 +80,32 @@
             </el-form-item>
         </el-form>
     </el-dialog>
+
+    <!--意见反馈对话框-->
+    <el-dialog title="意见反馈" :visible.sync="feedbackDialog" width="40%">
+        <el-form>
+            <el-form-item>
+                <el-select placeholder="反馈类型" v-model="feedback.category">
+                    <el-option label="功能建议" value="功能建议"></el-option>
+                    <el-option label="缺陷报告" value="缺陷报告"></el-option>
+                    <el-option label="用户体验" value="用户体验"></el-option>
+                    <el-option label="技术支持" value="技术支持"></el-option>
+                    <el-option label="其他" value="其他"></el-option>
+                </el-select>
+                <el-checkbox v-model="anonymous">匿名</el-checkbox>
+            </el-form-item>
+
+            <el-form-item label="反馈内容:">
+                <el-input v-model="feedback.content" type="textarea" :autosize="{ minRows: 5, maxRows: 5 }"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="sendMessage()">确认</el-button>
+                <el-button @click="resetForm()">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+    </el-dialog>
 </div>
 </body>
 <script th:src="@{~/js/vue.js}"></script>
@@ -97,6 +124,8 @@
                 email: ""
             },
             frame: "",    //主界面
+            feedback: {category:"功能建议"},//意见反馈
+            anonymous:true,
             PswDataForm: {//修改密码数据
                 oldPsw: '',
                 newPsw: '',
@@ -104,6 +133,8 @@
             },
             //修改密码对话卡是否显示
             changePasswordDialog: false,
+            //意见反馈对话框
+            feedbackDialog: false,
         },
         methods: {
             initUser() {
@@ -116,7 +147,7 @@
             },
             //更改主界面（图书信息，归还图书，借阅记录……）
             changeFrame(frame) {
-                this.frame = "pages/"+frame+".html";
+                this.frame = "pages/" + frame + ".html";
                 document.getElementById('cancel').click();   //关闭侧边栏
             },
             //打开修改密码对话框
@@ -163,6 +194,34 @@
             },
             logout() {
                 window.location.href = "logout";
+            },
+            /**----------------------------意见反馈------------------------------------*/
+            openFeedbackDialog() {
+                this.feedbackDialog = true;
+            },
+
+            resetForm(){
+                this.feedback = {category:"功能建议"};
+                this.feedbackDialog = false;
+            },
+            sendMessage(){
+                if(this.anonymous){//匿名
+                    this.feedback.sender = "匿名";
+                }else{
+                    this.feedback.sender = this.onlineUser.account;
+                }
+                this.feedback.email = this.onlineUser.email;
+                this.feedback.telephone = this.onlineUser.telephone;
+                this.feedbackDialog = false;
+                axios.post('/sendFeedback',this.feedback).then(res=>{
+                    if(res.data){
+                        this.$notify({
+                            title: '成功',
+                            message: '反馈信息发送成功，请留意您的邮箱和手机短信',
+                            type: 'success'
+                        });
+                    }
+                })
             }
         },
         //钩子函数
@@ -171,7 +230,7 @@
         }
     });
 
-    function getOnlineUser(){
+    function getOnlineUser() {
         return app.onlineUser;
     }
 </script>

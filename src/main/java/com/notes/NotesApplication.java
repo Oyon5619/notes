@@ -4,7 +4,11 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
@@ -14,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 @EnableCaching
 @Slf4j
+@EnableAutoConfiguration(exclude={MailSenderValidatorAutoConfiguration.class})
 public class NotesApplication {
 
     public static void main(String[] args) {

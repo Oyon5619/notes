@@ -183,13 +183,21 @@
                 })
             },
             deleteGroup(data){
-                console.log("deleteGroup")
+                console.log(this.notes);
                 console.log(data)
-                axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data).then(res =>{
-                    this.groups = res.data
-                    console.log("deleteGroupRes")
-                    console.log(res)
-                })
+                let flag = true;
+                for (let i = 0; i < this.notes.length; i++) {
+                    if(this.notes[i].notesGroup ===data){
+                        this.$message.error("有错题使用了该标签,请先删除错题再删除标签");
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data).then(res =>{
+                        this.groups = res.data
+                    })
+                }
             },
 
             /**---------------标签管理-end--------------------*/
