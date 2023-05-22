@@ -11,9 +11,9 @@
     <el-main>
         <el-form :inline="true" :model="formInLine" class="demo-form-inline">
             <el-form-item>
-<!--                <el-select placeholder="标签" v-model="formInLine.tag">-->
-<!--                    <el-option :label="item" :value="item" v-for="item in tagList" :key="item"></el-option>-->
-<!--                </el-select>-->
+                <!--                <el-select placeholder="标签" v-model="formInLine.tag">-->
+                <!--                    <el-option :label="item" :value="item" v-for="item in tagList" :key="item"></el-option>-->
+                <!--                </el-select>-->
                 <el-input placeholder="标签" v-model="formInLine.tag"></el-input>
             </el-form-item>
             <el-form-item>
@@ -29,14 +29,14 @@
 
             <el-form-item>
                 <el-button type="primary" @click="getNotes">查询</el-button>
-                <el-button type="info" @click="resetFormInLine">清空搜索词</el-button>
             </el-form-item>
         </el-form>
 
-        <!--批量移至回收站按钮,新增按钮-->
+        <!--批量删除,新增按钮-->
         <el-row>
-            <el-button type="danger" plain @click="multiDeleteNotes">批量移至回收站</el-button>
+            <el-button type="danger" plain @click="multiDeleteNotes">批量删除</el-button>
             <el-button type="primary" plain @click="addNotes">新增</el-button>
+            <el-button type="success" plain @click="dialogVisible4Tag=true;getGroups">我的标签</el-button>
         </el-row>
 
 
@@ -60,7 +60,7 @@
                 <template slot-scope="scope">
                     <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
                     <el-button type="primary" size="mini" @click="editNotes(scope.row)">编辑</el-button>
-                    <el-button type="danger" size="mini" @click="deleteNotes(scope.row)">移至回收站</el-button>
+                    <el-button type="danger" size="mini" @click="deleteNotes(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -77,12 +77,30 @@
         </el-pagination>
 
     </el-main>
+
+    <el-dialog title="我的标签" :visible.sync="dialogVisible4Tag" width="40%" center>
+        <el-tag :key="group" v-for="group in groups" closable :disable-transitions="false" @close="handleClose(group)">
+            {{group}}
+        </el-tag>
+        <el-input class="input-new-tag"
+                  style="width: 90px;margin-left: 10px;vertical-align: bottom"
+                  v-if="inputVisible"
+                  v-model="inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm">
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+    </el-dialog>
+
 </div>
 
 <script src="../js/vue.js"></script>
 <script src="../js/index.js"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
+<link rel="stylesheet" href="../css/notes.css">
 <link rel="stylesheet" href="../plugins/elementui/index.css">
 <script src="../plugins/elementui/index.js"></script>
 
@@ -93,7 +111,11 @@
         data: {
             //要展示的所有图书数据
             notes: [],
+            groups:[],
+            inputValue:"",
+            inputVisible: false,
             onlineUser: null,
+            dialogVisible4Tag:false,
             //存放复选框勾中的数据
             multipleSelection: [],
             //查询表单数据
@@ -114,11 +136,63 @@
         //钩子函数，VUE对象初始化完成后自动执行 /*OK*/
         created() {
             //调用查询全部
-            this.onlineUser = window.parent.getOnlineUser()
-            this.getAllNotes()
+            this.onlineUser = window.parent.getOnlineUser();
+            this.getAllNotes();
+            this.getGroups();
         },
 
         methods: {
+            /**---------------标签管理---------------------*/
+
+            handleClose(tag) {
+                this.groups.splice(this.groups.indexOf(tag), 1);
+            },
+
+            showInput() {
+                this.inputVisible = true;
+                this.$nextTick(_ => {
+                    this.$refs.saveTagInput.$refs.input.focus();
+                });
+            },
+
+            handleInputConfirm() {
+                let inputValue = this.inputValue;
+                if (inputValue) { // 添加标签
+                    this.groups.push(inputValue);
+                    this.addGroup(inputValue);
+                }
+                this.inputVisible = false;
+                this.inputValue = '';
+            },
+
+            handleClose(data){
+                this.deleteGroup(data);
+            },
+
+            //获取所有组
+            getGroups(){
+                axios.get('/getGroups/'+this.onlineUser.account).then(res =>{
+                    this.groups = res.data
+                    console.log(this.groups)
+                })
+            },
+
+            addGroup(newGroupName){
+                axios.get('/addGroup/'+this.onlineUser.account+"/"+newGroupName).then(res =>{
+                    this.groups = res.data
+                })
+            },
+            deleteGroup(data){
+                console.log("deleteGroup")
+                console.log(data)
+                axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data).then(res =>{
+                    this.groups = res.data
+                    console.log("deleteGroupRes")
+                    console.log(res)
+                })
+            },
+
+            /**---------------标签管理-end--------------------*/
             //查询所有错题
             getAllNotes() {
                 axios.post('/notes/getNotes/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
@@ -130,7 +204,6 @@
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
-                    console.log(r.data)
                     this.notes = r.data.records;
                 })
             },
@@ -154,7 +227,6 @@
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
-                    console.log(r.data)
                     this.notes = r.data.records;
                     this.$message.success("已完成刷新");
                 })
@@ -174,7 +246,7 @@
                     list.push(this.multipleSelection[i].notesId);
                 }
                 //弹出警告框,让用户进行二次确认
-                this.$confirm('确认将这些错题移至回收站吗?', 'Tips', {
+                this.$confirm('确认删除这些错题吗?', 'Tips', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -186,21 +258,21 @@
                         url: "/notes/multiDeleteNotes"
                     }).then((res) => {
                         if (res.data) {
-                            this.$message.success("移至回收站成功");
+                            this.$message.success("删除成功");
                         } else {
-                            this.$message.error("移至回收站失败");
+                            this.$message.error("删除失败");
                         }
                     }).finally(() => {
                         this.getAllNotes();
                     });
 
                 }).catch(() => {
-                    this.$message.info("已取消操作");
+                    this.$message.info("已取消删除");
                 })
             },
             deleteNotes(row) {
                 //弹出警告框,让用户进行二次确认
-                this.$confirm('确认将这个错题移至回收站吗?', 'Tips', {
+                this.$confirm('确认删除这个错题吗?', 'Tips', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -208,36 +280,31 @@
                     //ajax发送批量删除请求
                     axios.delete('/notes/deleteNotes/' + row.notesId).then((res) => {
                         if (res.data) {
-                            this.$message.success("移至回收站成功");
+                            this.$message.success("删除成功");
                         } else {
-                            this.$message.error("移至回收站失败");
+                            this.$message.error("删除失败");
                         }
                     }).finally(() => {
                         this.getAllNotes();
                     });
 
                 }).catch(() => {
-                    this.$message.info("已取消操作");
+                    this.$message.info("已取消删除");
                 })
             },
             <!--分页-->
             handleSizeChange(val) { //切换当前页显示条数
                 this.pagination.pageSize = val;
-                this.getNotes();
+                this.getAllNotes();
             },
             handleCurrentChange(val) { //切换页码值
                 this.pagination.currentPage = val;
-                this.getNotes();
+                this.getAllNotes();
             },
+
             //复选框选中后执行的方法 /*OK*/
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-            },
-            // 清空搜索词
-            resetFormInLine() {
-                this.formInLine.tag = '';
-                this.formInLine.priority = '';
-                this.formInLine.content = '';
             }
         }
     });
