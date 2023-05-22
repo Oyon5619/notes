@@ -17,8 +17,8 @@ public class GroupController {
     /**
      * 获取当前用户的所有分组名称
      * */
-    @GetMapping("/getGroups")
-    public String[] getGroups(String account){
+    @GetMapping("/getGroups/{account}")
+    public String[] getGroups(@PathVariable String account){
         return groupService.getGroupsName(account);
     }
 
@@ -33,7 +33,7 @@ public class GroupController {
     /**
      *删除分组
      **/
-    @GetMapping("/deleteGroup")
+    @GetMapping("/deleteGroup/{account}/{groupName}")
     public String[] deleteGroup(@PathVariable String account, @PathVariable String groupName){
         return groupService.deleteGroup(account,groupName);
     }

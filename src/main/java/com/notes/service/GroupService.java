@@ -27,7 +27,7 @@ public class GroupService {
      * @param account 当前用户账号
      * @return 所有组名
      */
-    @Cacheable(value = "GroupsName", key = "#account")
+//    @Cacheable(value = "GroupsName", key = "#account")
     public String[] getGroupsName(String account) {
         try {
             User user = userMapper.selectById(account);
@@ -46,7 +46,7 @@ public class GroupService {
      * @param newGroupName 新组名
      * @return 所有组名
      */
-    @CachePut(value = "GroupsName", key = "#account")
+//    @CachePut(value = "GroupsName", key = "#account")
     public String[] addGroup(String account, String newGroupName) {
         try {
             User user = userMapper.selectById(account);
@@ -70,7 +70,7 @@ public class GroupService {
      * @param newGroupName 更新组名
      * @return 所有组名
      */
-    @CachePut(value = "GroupsName", key = "#account")
+//    @CachePut(value = "GroupsName", key = "#account")
     public String[] updateGroup(String account,String oldGroupName, String newGroupName) {
         try {
             User user = userMapper.selectById(account);
@@ -93,7 +93,7 @@ public class GroupService {
      * @param groupName 要删除的组名
      * @return 删除后的所有组名
      */
-    @CachePut(value = "GroupsName", key = "#account")
+//    @CachePut(value = "GroupsName", key = "#account")
     public String[] deleteGroup(String account, String groupName) {
         try {
             notesMapper.deleteGroup(groupName);

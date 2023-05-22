@@ -34,7 +34,7 @@
             <li><i class="fa fa-envelope"></i><span id="email">[[${email}]]</span></li>
         </ul>
         <ul id="center">
-            <li><a href="javascript:app.changeFrame('MyNotes')"><i class="fa fa-server"></i>错题集</a></li>
+            <li><a href="javascript:app.changeFrame('notes')"><i class="fa fa-server"></i>错题集</a></li>
             <li><a href="javascript:app.changeFrame('#')"><i class="fa fa-tasks"></i>分组管理</a></li>
             <li><a href="javascript:app.changeFrame('#')"><i class="fa fa-server"></i>复习计划</a></li>
             <li><a href="javascript:app.changeFrame('statistics')"><i class="fa fa-tasks"></i>数据统计</a></li>
@@ -113,7 +113,7 @@
                 this.onlineUser.username = document.getElementById("userName").innerText;
                 this.onlineUser.telephone = document.getElementById("telephone").innerText;
                 this.onlineUser.email = document.getElementById("email").innerText;
-                this.changeFrame('MyNotes')
+                this.changeFrame('notes')
             },
             //更改主界面（图书信息，归还图书，借阅记录……）
             changeFrame(frame) {

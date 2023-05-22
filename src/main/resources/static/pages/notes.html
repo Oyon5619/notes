@@ -36,6 +36,7 @@
         <el-row>
             <el-button type="danger" plain @click="multiDeleteNotes">批量删除</el-button>
             <el-button type="primary" plain @click="addNotes">新增</el-button>
+            <el-button type="success" plain @click="dialogVisible4Tag=true;getGroups">我的标签</el-button>
         </el-row>
 
 
@@ -76,12 +77,30 @@
         </el-pagination>
 
     </el-main>
+
+    <el-dialog title="我的标签" :visible.sync="dialogVisible4Tag" width="40%" center>
+        <el-tag :key="group" v-for="group in groups" closable :disable-transitions="false" @close="handleClose(group)">
+            {{group}}
+        </el-tag>
+        <el-input class="input-new-tag"
+                  style="width: 90px;margin-left: 10px;vertical-align: bottom"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm">
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+    </el-dialog>
+
 </div>
 
 <script src="../js/vue.js"></script>
 <script src="../js/index.js"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
+<link rel="stylesheet" href="../css/notes.css">
 <link rel="stylesheet" href="../plugins/elementui/index.css">
 <script src="../plugins/elementui/index.js"></script>
 
@@ -92,7 +111,11 @@
         data: {
             //要展示的所有图书数据
             notes: [],
+            groups:[],
+            inputValue:"",
+            inputVisible: false,
             onlineUser: null,
+            dialogVisible4Tag:false,
             //存放复选框勾中的数据
             multipleSelection: [],
             //查询表单数据
@@ -113,11 +136,63 @@
         //钩子函数，VUE对象初始化完成后自动执行 /*OK*/
         created() {
             //调用查询全部
-            this.onlineUser = window.parent.getOnlineUser()
-            this.getAllNotes()
+            this.onlineUser = window.parent.getOnlineUser();
+            this.getAllNotes();
+            this.getGroups();
         },
 
         methods: {
+            /**---------------标签管理---------------------*/
+
+            handleClose(tag) {
+                this.groups.splice(this.groups.indexOf(tag), 1);
+            },
+
+            showInput() {
+                this.inputVisible = true;
+                this.$nextTick(_ => {
+                    this.$refs.saveTagInput.$refs.input.focus();
+                });
+            },
+
+            handleInputConfirm() {
+                let inputValue = this.inputValue;
+                if (inputValue) { // 添加标签
+                    this.groups.push(inputValue);
+                    this.addGroup(inputValue);
+                }
+                this.inputVisible = false;
+                this.inputValue = '';
+            },
+
+            handleClose(data){
+                this.deleteGroup(data);
+            },
+
+            //获取所有组
+            getGroups(){
+                axios.get('/getGroups/'+this.onlineUser.account).then(res =>{
+                    this.groups = res.data
+                    console.log(this.groups)
+                })
+            },
+
+            addGroup(newGroupName){
+                axios.get('/addGroup/'+this.onlineUser.account+"/"+newGroupName).then(res =>{
+                    this.groups = res.data
+                })
+            },
+            deleteGroup(data){
+                console.log("deleteGroup")
+                console.log(data)
+                axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data).then(res =>{
+                    this.groups = res.data
+                    console.log("deleteGroupRes")
+                    console.log(res)
+                })
+            },
+
+            /**---------------标签管理-end--------------------*/
             //查询所有错题
             getAllNotes() {
                 axios.post('/notes/getNotes/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
@@ -129,7 +204,6 @@
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
-                    console.log(r.data)
                     this.notes = r.data.records;
                 })
             },
@@ -153,7 +227,6 @@
                     this.pagination.currentPage = r.data.current;
                     this.pagination.pageSize = r.data.size;
                     this.pagination.total = r.data.total;
-                    console.log(r.data)
                     this.notes = r.data.records;
                     this.$message.success("已完成刷新");
                 })
