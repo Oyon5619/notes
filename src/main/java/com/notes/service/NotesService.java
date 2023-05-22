@@ -104,6 +104,39 @@ public class NotesService {
         return null;
     }
 
+    // 获取回收站里的错题
+    public IPage<Notes> getNotes2(long currentPage,long pageSize,
+                                 String account, Map<String, String> condition,
+                                 int order, String orderCondition) {
+        try {
+            if(condition.isEmpty()){
+                QueryWrapper<Notes> wrapper = new QueryWrapper<>();
+                wrapper.eq("promulgator",account);
+                wrapper.eq("deleted", true);
+                IPage<Notes> page = new Page<>(currentPage, pageSize);
+                notesMapper.selectPage(page,wrapper);
+                return page;
+            }
+            else {
+                QueryWrapper<Notes> wrapper = new QueryWrapper<>();
+                wrapper.eq("promulgator",account);
+                wrapper.eq("deleted", true);
+                if (!condition.get("priority").isEmpty())
+                    wrapper.eq("priority", condition.get("priority"));
+                if (!condition.get("notesGroup").isEmpty())
+                    wrapper.eq("notes_group", condition.get("notesGroup"));
+                if (!condition.get("content").isEmpty())
+                    wrapper.like("notes_title", "%"+condition.get("content")+"%");
+                IPage<Notes> page = new Page<>(currentPage, pageSize);
+                notesMapper.selectPage(page,wrapper);
+                return page;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 更新Notes
      */
@@ -120,7 +153,7 @@ public class NotesService {
     }
 
     /**
-     * 删除错题
+     * 删除错题 (移至回收站)
      *
      * @return 是否删除成功
      */
@@ -131,6 +164,42 @@ public class NotesService {
             Notes notes = getNotesById(notesId);
             notes.setDeleted(true);
             notesMapper.updateById(notes);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 彻底删除错题
+     *
+     * @return 是否彻底删除成功
+     */
+    @CacheEvict(value = "getNotesById",key = "#notesId")
+    public boolean reallyDelete(int notesId) {
+        try {
+            //TODO
+            notesMapper.deleteById(notesId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 批量彻底删除错题(调用delete方法,用于删除缓存）
+     *
+     * @param notesIds 要删除的notesId集合
+     * @return 是否彻底删除成功
+     */
+    public boolean reallyDelete(List<Integer> notesIds) {
+        try {
+            //TODO
+            QueryWrapper<Notes> qw = new QueryWrapper<>();
+            qw.in("notes_id", notesIds);
+            notesMapper.delete(qw);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,6 +221,7 @@ public class NotesService {
                 notes.setDeleted(true);
                 notesMapper.updateById(notes);
             }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

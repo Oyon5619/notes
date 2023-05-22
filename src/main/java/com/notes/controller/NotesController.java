@@ -45,6 +45,16 @@ public class NotesController {
         return notesService.getNotes(currentPage,pageSize,account,condition,order,orderCondition);
     }
 
+    @PostMapping("/getNotes2/{currentPage}/{pageSize}")
+    public IPage<Notes> getNotes2(@PathVariable long currentPage, @PathVariable long pageSize,@RequestBody Map<String,Object> map) {
+        String account = (String) map.get("account");
+        Map<String,String> condition = (Map<String, String>) map.get("condition");
+        int order = (int) map.get("order");
+        String orderCondition = (String) map.get("orderCondition");
+        log.info("[getNotes] condition = {}", condition);
+        return notesService.getNotes2(currentPage,pageSize,account,condition,order,orderCondition);
+    }
+
     @PostMapping("/test/{id}")
     public String test(@PathVariable String id){
         return id;
@@ -72,7 +82,7 @@ public class NotesController {
     }
 
     /**
-     * 删除错题
+     * 删除错题 (移至回收站)
      *
      * @return 是否删除成功
      */
@@ -82,7 +92,7 @@ public class NotesController {
     }
 
     /**
-     * 批量删除错题(调用delete方法,用于删除缓存）
+     * 批量删除错题(调用delete方法,用于删除缓存）(移至回收站)
      *
      * @param selectedNotesId 要删除的notesId集合
      * @return 是否删除成功
@@ -90,5 +100,46 @@ public class NotesController {
     @DeleteMapping("/multiDeleteNotes")
     public boolean multiDeleteNotes(@RequestBody List<Integer> selectedNotesId) {
         return notesService.delete(selectedNotesId);
+    }
+
+    /**
+     * 彻底删除错题
+     *
+     * @return 是否删除成功
+     */
+    @DeleteMapping("/reallyDeleteNotes/{notesId}")
+    public boolean reallyDeleteNotes(@PathVariable Integer notesId) {
+        return notesService.reallyDelete(notesId);
+    }
+
+    /**
+     * 彻底批量删除错题(调用delete方法,用于删除缓存）
+     *
+     * @param selectedNotesId 要删除的notesId集合
+     * @return 是否删除成功
+     */
+    @DeleteMapping("/multiReallyDeleteNotes")
+    public boolean multiReallyDeleteNotes(@RequestBody List<Integer> selectedNotesId) {
+        return notesService.reallyDelete(selectedNotesId);
+    }
+
+    /**
+     * 还原错题
+     *
+     * @return 是否还原成功
+     */
+    @PutMapping("/restoreNotes/{notesId}")
+    public boolean restoreNotes(@PathVariable Integer notesId) {
+        return notesService.restore(notesId);
+    }
+
+    /**
+     * 批量删除还原错题(调用restore方法）
+     *
+     * @return 是否还原成功
+     */
+    @PutMapping("/multiRestoreNotes")
+    public boolean multiRestoreNotes(@RequestBody List<Integer> selectedNotesId) {
+        return notesService.restore(selectedNotesId);
     }
 }
