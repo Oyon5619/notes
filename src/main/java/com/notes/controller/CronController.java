@@ -1,14 +1,16 @@
 package com.notes.controller;
 
 import com.notes.bean.ScheduledTask;
+import com.notes.bean.WebSocket;
 import com.notes.domain.LogTask;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 import java.util.ArrayList;
 import java.util.List;
  
@@ -20,7 +22,11 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class CronController {
- 
+
+    @Autowired
+    WebSocket webSocket;
+
+
     @GetMapping("/cron1")
     public void cron1(){
         //创建一个任务的容器
@@ -61,5 +67,11 @@ public class CronController {
         scheduledTask.configureTasks(new ScheduledTaskRegistrar());
         //调用refresh()方法传入任务数据
         scheduledTask.refresh(logTasks);
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        webSocket.sendOneMessage("lisi","{'sender':'zhangsan','content':'hello','receiver':'lisi'}");
+        return "true";
     }
 }
