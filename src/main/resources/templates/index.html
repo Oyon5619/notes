@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{~/plugins/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{~/css/style.css}">
 </head>
-<body class="hold-transition">
+<body class="hold-transition" onload="init()">
 <div id="app">
     <input type="checkbox" id="check">
     <label for="check">
@@ -224,7 +224,15 @@
                         this.resetForm();
                     }
                 })
-            }
+            },
+            prompt(data) { // 收到消息提示
+                console.log(data)
+                this.$notify({
+                    title: data.sender + '发来一条消息',
+                    message: data.content,
+                    type: 'info'
+                });
+            },
         },
         //钩子函数
         created() {
@@ -234,6 +242,52 @@
 
     function getOnlineUser() {
         return app.onlineUser;
+    }
+
+
+    function sendMessage(msg) { // 发送信息
+        websocket.send(JSON.stringify(msg));
+    }
+
+    /**---------websocket------------*/
+    const wsUri = "ws://127.0.0.1:8080/websocket/" + getOnlineUser().account;
+    let websocket = new WebSocket(wsUri);
+
+    function init() {
+        testWebSocket();
+    }
+
+    function testWebSocket() {
+        websocket.onopen = function (evt) {
+            onOpen(evt)
+        };
+        websocket.onclose = function (evt) {
+            onClose(evt)
+        };
+        websocket.onmessage = function (evt) {
+            onMessage(evt)
+        };
+        websocket.onerror = function (evt) {
+            onError(evt)
+        };
+    }
+
+    function onOpen(evt) {
+        console.log("onOpen :" + evt.data);
+    }
+
+    function onClose(evt) {
+        console.log("onClose :" + evt.data);
+    }
+
+    function onMessage(evt) {
+        alert("hahahaha")
+        console.log("onMessage :" + evt.data);
+        app.prompt(JSON.parse(evt.data));
+    }
+
+    function onError(evt) {
+        console.log("error:" + evt.data);
     }
 </script>
 </html>
