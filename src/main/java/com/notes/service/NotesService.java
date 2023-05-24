@@ -124,7 +124,6 @@ public class NotesService {
      */
     public boolean delete(int notesId) {
         try {
-            //TODO
             Notes notes = getNotesById(notesId);
             notes.setDeleted(true);
             notesMapper.updateById(notes);
@@ -143,7 +142,6 @@ public class NotesService {
      */
     public boolean delete(List<Integer> notesIds) {
         try {
-            //TODO
             for (int i = 0; i < notesIds.size(); i++) {
                 Notes notes = notesMapper.selectById(notesIds.get(i));
                 notes.setDeleted(true);
@@ -162,7 +160,6 @@ public class NotesService {
      */
     public boolean restore(int notesId) {
         try {
-            //TODO
             Notes notes = notesMapper.selectById(notesId);
             notes.setDeleted(false);
             notesMapper.updateById(notes);
@@ -181,7 +178,6 @@ public class NotesService {
      */
     public boolean restore(List<Integer> notesIds) {
         try {
-            //TODO
             for (int i = 0; i < notesIds.size(); i++) {
                 Notes notes = notesMapper.selectById(notesIds.get(i));
                 notes.setDeleted(false);

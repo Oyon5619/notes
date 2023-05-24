@@ -1,6 +1,7 @@
 package com.notes.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.notes.domain.Notes;
 import com.notes.domain.Review;
 import com.notes.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,25 @@ public class ReviewController {
     public boolean refreshReview(@PathVariable String account){
         reviewService.refreshReview(account);
         return true;
+    }
+
+
+    @PostMapping("/getReview/{currentPage}/{pageSize}")
+    public IPage<Review> getReview(@PathVariable long currentPage, @PathVariable long pageSize,@RequestBody Map<String,Object> map) {
+        String account = (String) map.get("account");
+        Map<String,String> condition = (Map<String, String>) map.get("condition");
+        return reviewService.getReviews(currentPage,pageSize,account,condition);
+    }
+
+
+    @GetMapping("/deleteReview/{reviewId}")
+    public boolean deleteReview(@PathVariable Integer reviewId) {
+        return reviewService.deleteReview(reviewId);
+    }
+
+    @PostMapping("/finishReview")
+    public boolean finishReview(@RequestBody Review review){
+        return reviewService.finishReview(review);
     }
 
 }

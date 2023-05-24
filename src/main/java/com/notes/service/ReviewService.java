@@ -28,6 +28,7 @@ public class ReviewService {
     @Autowired
     WebSocket webSocket;
 
+
     public boolean addReview(Review review){
         try{
             reviewMapper.insert(review);
@@ -38,6 +39,10 @@ public class ReviewService {
         }
     }
 
+
+    /**
+     * 查询Review（条件看前端）
+     * */
     public IPage<Review> getReviews(long currentPage, long pageSize, String account, Map<String, String> condition){
         if(condition.isEmpty()){
             QueryWrapper<Review> wrapper = new QueryWrapper<>();
@@ -49,6 +54,36 @@ public class ReviewService {
         }
         return null;
     }
+
+    /**
+     * 完成Review（状态改为 ‘已完成’）
+     * */
+    public boolean finishReview(Review review){
+        try{
+            review.setStatus("已完成");
+            reviewMapper.updateById(review);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 删除Review
+     * */
+    public boolean deleteReview(int reviewId){
+        try{
+            Review review = reviewMapper.selectById(reviewId);
+            review.setDeleted(true);
+            reviewMapper.updateById(review);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     //通过ws协议提醒用户复习
     public void remindReview(Review review){

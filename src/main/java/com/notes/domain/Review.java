@@ -23,6 +23,6 @@ public class Review {
     private String cron; //cron表达式
     private int num; // 复习次数
     private String status;//复习状态
-    private String deleted; //删除标志
+    private boolean deleted; //删除标志
     private String updateTime; // 更新时间
 }
