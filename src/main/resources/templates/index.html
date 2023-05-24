@@ -228,15 +228,23 @@
             prompt(data) { // 收到消息提示
                 console.log(data)
                 this.$notify({
-                    title: data.sender + '发来一条消息',
+                    title: "【复习计划】"+data.title,
                     message: data.content,
                     type: 'info'
                 });
             },
+            refreshReview(){
+                axios.get('/review/refreshReview/'+this.onlineUser.account).then(res=>{
+                    if(res.data){
+                        console.log("开启任务提醒!");
+                    }
+                })
+            }
         },
         //钩子函数
         created() {
             this.initUser();
+            this.refreshReview();
         }
     });
 
@@ -281,7 +289,6 @@
     }
 
     function onMessage(evt) {
-        alert("hahahaha")
         console.log("onMessage :" + evt.data);
         app.prompt(JSON.parse(evt.data));
     }

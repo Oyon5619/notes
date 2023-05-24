@@ -1,7 +1,6 @@
 package com.notes.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.notes.domain.Notes;
 import com.notes.domain.Review;
 import com.notes.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +25,21 @@ public class ReviewController {
     @PostMapping("/addReview")
     public boolean addReview(@RequestBody Review review){
         return reviewService.addReview(review);
+    }
+
+    @GetMapping("/refreshReview/{account}")
+    public boolean refreshReview(@PathVariable String account){
+        reviewService.refreshReview(account);
+        return true;
+    }
+
+    @GetMapping("/test")
+    public boolean test(){
+        Review review = new Review();
+        review.setTitle("test");
+        review.setContent("test");
+        review.setPromulgator("lisi");
+        reviewService.remindReview(review);
+        return true;
     }
 }

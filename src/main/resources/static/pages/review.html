@@ -51,6 +51,7 @@
             <el-table-column label="操作" align="center" width="280">
                 <template slot-scope="scope">
                     <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
+                    <el-button type="primary" size="mini" @click="detail(scope.row)">完成</el-button>
                     <el-button type="danger" size="mini" @click="deleteReview(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -192,6 +193,20 @@
                     case 'SAT':return '星期六'
                     case 'SUN':return '星期日'
                 }
+            },
+            <!--分页-->
+            handleSizeChange(val) { //切换当前页显示条数
+                this.pagination.pageSize = val;
+                this.getAllReview();
+            },
+            handleCurrentChange(val) { //切换页码值
+                this.pagination.currentPage = val;
+                this.getAllReview();
+            },
+
+            //复选框选中后执行的方法 /*OK*/
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
             }
 
         },
