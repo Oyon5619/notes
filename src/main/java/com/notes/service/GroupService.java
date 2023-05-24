@@ -4,8 +4,6 @@ import com.notes.domain.User;
 import com.notes.mapper.NotesMapper;
 import com.notes.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 
@@ -102,11 +100,10 @@ public class GroupService {
             String group = user.getUserGroups();
             user.setUserGroups(group.replace(groupName,""));
             userMapper.updateById(user);
+            return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
 }

@@ -132,4 +132,20 @@ VALUES ('zhangsan','快去学习','快去学习','每隔10s','每天计划','5 * * * * ?'),
        ('lisi','快去学习','快去学习','每隔10s','每天计划','25 * * * * ?'),
        ('lisi','快去学习','快去学习','每隔10s','每天计划','35 * * * * ?'),
        ('lisi','快去学习','快去学习','每隔10s','每天计划','45 * * * * ?'),
-       ('lisi','快去学习','快去学习','每隔10s','每天计划','55 * * * * ?')
+       ('lisi','快去学习','快去学习','每隔10s','每天计划','55 * * * * ?');
+
+DROP TABLE IF EXISTS `t_sign`;
+
+CREATE TABLE t_sign
+(
+    sign_id   int auto_increment comment '签到id' primary key,
+    signer varchar(30)                           comment '签到者账号',
+    year    int not null comment '年',
+    month int not null comment '月',
+    day int not null comment '日',
+    foreign key (signer) references t_user (account)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8
+  COLLATE = utf8_general_ci
+  ROW_FORMAT = Dynamic;

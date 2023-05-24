@@ -33,13 +33,4 @@ public class ReviewController {
         return true;
     }
 
-    @GetMapping("/test")
-    public boolean test(){
-        Review review = new Review();
-        review.setTitle("test");
-        review.setContent("test");
-        review.setPromulgator("lisi");
-        reviewService.remindReview(review);
-        return true;
-    }
 }
