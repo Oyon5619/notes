@@ -149,3 +149,9 @@ CREATE TABLE t_sign
   CHARACTER SET = utf8
   COLLATE = utf8_general_ci
   ROW_FORMAT = Dynamic;
+
+create view v_sign
+as
+select t.sign_date,COUNT(*) as cardNumber
+from t_sign t
+group by t.sign_date;

@@ -29,6 +29,7 @@ public class Sign implements Comparable<Sign>{
         this.signer = signer;
         this.year = year;
         this.month = month;
+        this.day = day;
         this.signDate = signDate;
     }
 

@@ -38,35 +38,53 @@ public class SignService {
 
     /**
      * 获取签到表（整个系统）
+     *
      */
     public CalendarTable getSignTable(int year, int month, String account) {
         try {
             CalendarTable table = new CalendarTable();
-            QueryWrapper<Sign> wrapper = new QueryWrapper<>();
-            wrapper.eq("year",year);
-            wrapper.eq("month",month);
-            List<Sign> list = signMapper.selectList(wrapper); // 当月签到记录
-            Collections.sort(list); // 按日期排序
+            List<Sign> list = signMapper.getAllSign(); // 当月签到记录
+            Map<String,Sign> map = new HashMap<>(); // 赛选
+            for (int i = 0; i < list.size(); i++) {
+                Sign sign = list.get(i);
+                if(sign.getSigner().equals(account)){ // 如果是当前登录用户
+                    sign.setSign(true); // 有签到
+                    map.put(list.get(i).getSignDate(),sign);
+                }else{ // 未匹配到当前登录用户（只能写入一次）
+                    if(!map.containsKey(sign.getSignDate())){ // 未装配
+                        sign.setSign(false); // 暂时未签到
+                        map.put(sign.getSignDate(),sign);
+                    }
+                }
+            }
             int days = getMonthDays(year,month);
-            int index = 0;
             int continuous = 0;
             List<Sign> ret = new ArrayList<>(); // 返回日历表
             for (int i = 1; i <= days ; i++) {
-                if(list.get(index).getDay()==i){ // 已签到
-                    ret.add(list.get(index));
-                    index ++;
-                }else{ // 未签到
+                String key =String.format("%04d-%02d-%02d",year,month,i);
+                if(map.containsKey(key)){ // 当天有人签到（前面已经处理过一次数据）
+                    if(map.get(key).isSign()){ // 有签到
+                        continuous++;
+                    }else{
+                        continuous = 0;
+                    }
+                    ret.add(map.get(key));
+                }else{ // 当天无人签到
+                    continuous = 0;
                     Sign sign = new Sign();
                     sign.setSign(false); // 未签到
                     sign.setYear(year);
                     sign.setMonth(month);
                     sign.setDay(i);
-                    sign.setSignDate(String.format("%04d-%02d-%02d",year,month,i));
+                    sign.setSignDate(key);
                     sign.setCardNumber(0);
                     ret.add(sign);
                 }
             }
-            return null;
+            table.setCalendar(ret);
+            table.setMonth(String.format("%04d-%02d",year,month));
+            table.setContinuous(continuous);
+            return table;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
