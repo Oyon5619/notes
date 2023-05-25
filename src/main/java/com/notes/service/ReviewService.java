@@ -1,20 +1,22 @@
 package com.notes.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.notes.bean.ScheduledTask;
 import com.notes.bean.WebSocket;
-import com.notes.domain.Notes;
 import com.notes.domain.Review;
+import com.notes.domain.User;
 import com.notes.mapper.ReviewMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,15 @@ public class ReviewService {
 
     @Autowired
     WebSocket webSocket;
+
+    @Autowired
+    UserService userService;
+
+    @Value("${spring.mail.username}")
+    String username;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     public Review getReviewById(int reviewId){
@@ -110,9 +121,27 @@ public class ReviewService {
         review.setNum(review.getNum()+1);// 复习次数加一
         reviewMapper.updateById(review);
         JSONObject json = new JSONObject();
-        json.put("title",review.getTitle());
-        json.put("content",review.getContent());
-        webSocket.sendOneMessage(review.getPromulgator(),json.toJSONString());
+        if(webSocket.checkUserHasLogin(review.getPromulgator())){ // 如果用户有登录
+            log.info("【任务提醒】"+review.getPromulgator()+"用户已登录,发送任务提醒");
+            json.put("title",review.getTitle());
+            json.put("content",review.getContent());
+            webSocket.sendOneMessage(review.getPromulgator(),json.toJSONString());
+        }else{
+            log.info("【任务提醒】"+review.getPromulgator()+"用户未登录,发送邮箱提醒");
+            User user = userService.getUserByAccount(review.getPromulgator());
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(username);//自己给自己发邮件
+            message.setTo(user.getEmail());
+            message.setSubject("错题管理系统【复习计划提醒】");
+            message.setText("亲爱的"+user.getUsername()+",你的复习计划【"+review.getTitle()+"】到时间啦，记得上线查看喔 ~");
+            try{
+                mailSender.send(message);
+            }catch (MailException e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void refreshReview(String account){

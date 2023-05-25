@@ -25,6 +25,10 @@ public class UserService {
         }
     }
 
+    public User getUserByAccount(String account){
+        return userMapper.selectById(account);
+    }
+
     //判断用户是否已经注册
     public boolean checkUserHasRegister(String account) {
         try {
