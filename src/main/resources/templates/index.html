@@ -37,7 +37,7 @@
             <li><a href="javascript:app.changeFrame('notes')"><i class="fa fa-server"></i>错题集</a></li>
             <li><a href="javascript:app.changeFrame('review')"><i class="fa fa-server"></i>复习计划</a></li>
             <li><a href="javascript:app.changeFrame('statistics')"><i class="fa fa-tasks"></i>数据统计</a></li>
-            <li><a href="javascript:app.changeFrame('#')"><i class="fa fa-tasks"></i>打卡区</a></li>
+            <li><a href="javascript:app.changeFrame('sign')"><i class="fa fa-tasks"></i>打卡区</a></li>
             <li><a href="javascript:app.changeFrame('#')"><i class="fa fa-tasks"></i>草稿纸</a></li>
             <li><a href="javascript:app.changeFrame('trash')"><i class="fa fa-trash"></i>回收站</a></li>
         </ul>
@@ -116,6 +116,7 @@
     const app = new Vue({
         el: "#app",
         data: {
+            test:null,
             onlineUser: { //当前在线用户信息
                 account: "",
                 password: "",
@@ -123,6 +124,7 @@
                 telephone: "",
                 email: ""
             },
+            signData:null, // 提前准备好签到数据
             frame: "",    //主界面
             feedback: {category:"功能建议"},//意见反馈
             anonymous:true,
@@ -239,12 +241,21 @@
                         console.log("开启任务提醒!");
                     }
                 })
+            },
+            setSignDate(){
+                let date = new Date();
+                let year = date.getFullYear();
+                let month = date.getMonth()+1;
+                axios.get('/sign/getSignTable/'+year+"/"+month+"/"+this.onlineUser.account).then(res=>{
+                    this.signData = res.data;
+                })
             }
         },
         //钩子函数
         created() {
             this.initUser();
             this.refreshReview();
+            this.setSignDate();
         }
     });
 
@@ -252,6 +263,14 @@
         return app.onlineUser;
     }
 
+    function getSignData(){
+        return app.signData;
+    }
+
+    function test(data){
+        app.test = data;
+        return data;
+    }
 
     function sendMessage(msg) { // 发送信息
         websocket.send(JSON.stringify(msg));

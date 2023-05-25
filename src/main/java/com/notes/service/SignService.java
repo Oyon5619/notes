@@ -20,7 +20,7 @@ public class SignService {
     /**
      * 打卡
      */
-    public boolean signIn(String account) {
+    public String signIn(String account) {
         try {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -29,10 +29,10 @@ public class SignService {
             String signDate = String.format("%04d-%02d-%02d",year,month,day);
             Sign sign = new Sign(account,year,month,day, signDate);
             signMapper.insert(sign);
-            return true;
+            return signDate;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return "";
         }
     }
 
@@ -44,15 +44,17 @@ public class SignService {
         try {
             CalendarTable table = new CalendarTable();
             List<Sign> list = signMapper.getAllSign(); // 当月签到记录
-            Map<String,Sign> map = new HashMap<>(); // 赛选
+            Map<String,Sign> map = new HashMap<>(); // 筛选
+            Map<String,Boolean> m = new HashMap<>();
+            Map<String,Integer> n = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 Sign sign = list.get(i);
                 if(sign.getSigner().equals(account)){ // 如果是当前登录用户
-                    sign.setSign(true); // 有签到
+                    sign.setHasSign(true); // 有签到
                     map.put(list.get(i).getSignDate(),sign);
                 }else{ // 未匹配到当前登录用户（只能写入一次）
                     if(!map.containsKey(sign.getSignDate())){ // 未装配
-                        sign.setSign(false); // 暂时未签到
+                        sign.setHasSign(false); // 暂时未签到
                         map.put(sign.getSignDate(),sign);
                     }
                 }
@@ -63,7 +65,7 @@ public class SignService {
             for (int i = 1; i <= days ; i++) {
                 String key =String.format("%04d-%02d-%02d",year,month,i);
                 if(map.containsKey(key)){ // 当天有人签到（前面已经处理过一次数据）
-                    if(map.get(key).isSign()){ // 有签到
+                    if(map.get(key).isHasSign()){ // 有签到
                         continuous++;
                     }else{
                         continuous = 0;
@@ -72,7 +74,7 @@ public class SignService {
                 }else{ // 当天无人签到
                     continuous = 0;
                     Sign sign = new Sign();
-                    sign.setSign(false); // 未签到
+                    sign.setHasSign(false); // 未签到
                     sign.setYear(year);
                     sign.setMonth(month);
                     sign.setDay(i);
@@ -81,7 +83,15 @@ public class SignService {
                     ret.add(sign);
                 }
             }
+            for (int i = 0; i < ret.size(); i++) {
+                m.put(ret.get(i).getSignDate(),ret.get(i).isHasSign());
+                n.put(ret.get(i).getSignDate(),ret.get(i).getCardNumber());
+            }
             table.setCalendar(ret);
+            table.setTable(m);
+            table.setNums(m.size());
+            table.setCurrentDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            table.setNumberTable(n);
             table.setMonth(String.format("%04d-%02d",year,month));
             table.setContinuous(continuous);
             return table;
@@ -94,11 +104,10 @@ public class SignService {
     /**
      * 判断用户是否打卡
      * */
-    public boolean isSignIn(int year,int month,int day,String account){
+    public boolean isSignIn(String account){
         QueryWrapper<Sign> wrapper = new QueryWrapper<>();
-        wrapper.eq("year",year);
-        wrapper.eq("month",month);
-        wrapper.eq("day",day);
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        wrapper.eq("sign_date",date);
         wrapper.eq("signer",account);
         return signMapper.selectList(wrapper).size()>0;
     }

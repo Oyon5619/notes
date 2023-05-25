@@ -25,13 +25,13 @@ public class SignController {
         return signService.getSignTable(year,month,account);
     }
 
-    @GetMapping("/isSignIn/{year}/{month}/{day}/{account}")
-    public boolean isSignIn(@PathVariable int year, @PathVariable int month, @PathVariable int day, @PathVariable String account){
-        return signService.isSignIn(year, month, day, account);
+    @GetMapping("/isSignIn/{account}")
+    public boolean isSignIn(@PathVariable String account){
+        return signService.isSignIn(account);
     }
 
     @GetMapping("/signIn/{account}")
-    public boolean signIn(@PathVariable String account){
+    public String signIn(@PathVariable String account){
         return signService.signIn(account);
     }
 }

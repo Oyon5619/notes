@@ -21,7 +21,7 @@ public class Sign implements Comparable<Sign>{
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String signDate;
     @TableField(exist = false)
-    private boolean sign; // 是否签到
+    private boolean hasSign; // 是否签到
     @TableField(exist = false)
     private int cardNumber; // 当天打卡人数
 
