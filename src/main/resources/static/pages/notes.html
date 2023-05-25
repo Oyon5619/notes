@@ -232,8 +232,7 @@
                 })
             },
             detail(row) {
-                row.proficiency = row.proficiency + 5;
-                axios.get('/notes/increaseProficiency/'+this.onlineUser.account).then(res=>{
+                axios.get('/notes/increaseProficiency/'+row.notesId).then(res=>{
                     this.getAllNotes();
                 });
                 localStorage.setItem('curRowId', row.notesId)
