@@ -11,10 +11,9 @@
     <el-main>
         <el-form :inline="true" :model="formInLine" class="demo-form-inline">
             <el-form-item>
-<!--                <el-select placeholder="标签" v-model="formInLine.tag">-->
-<!--                    <el-option :label="item" :value="item" v-for="item in tagList" :key="item"></el-option>-->
-<!--                </el-select>-->
-                <el-input placeholder="标签" v-model="formInLine.tag"></el-input>
+                <el-select placeholder="标签" v-model="formInLine.tag">
+                    <el-option :label="item" :value="item" v-for="item in groups" :key="item"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item>
                 <el-select placeholder="优先级" v-model="formInLine.priority">
@@ -50,11 +49,13 @@
             </el-table-column>
             <el-table-column prop="notesTitle" label="标题" align="center">
             </el-table-column>
-            <el-table-column prop="priority" label="优先级" align="center" :sortable="'priority'" width="200">
+            <el-table-column prop="priority" label="优先级" align="center"  width="200">
             </el-table-column>
-            <el-table-column prop="notesGroup" label="标签" align="center" :sortable="'notesGroup'" width="180">
+            <el-table-column prop="proficiency" label="熟练度" align="center"  width="200">
             </el-table-column>
-            <el-table-column prop="updateTime" label="更新时间" align="center" :sortable="'updateTime'" width="200">
+            <el-table-column prop="notesGroup" label="标签" align="center"  width="180">
+            </el-table-column>
+            <el-table-column prop="updateTime" label="更新时间" align="center"  width="200">
             </el-table-column>
             <el-table-column label="操作" align="center" width="280">
                 <template slot-scope="scope">
@@ -231,6 +232,10 @@
                 })
             },
             detail(row) {
+                row.proficiency = row.proficiency + 5;
+                axios.get('/notes/increaseProficiency/'+this.onlineUser.account).then(res=>{
+                    this.getAllNotes();
+                });
                 localStorage.setItem('curRowId', row.notesId)
                 location.href = "http://localhost:8080/pages/notesDetail.html"
                 this.$message.success("跳转到详情界面")

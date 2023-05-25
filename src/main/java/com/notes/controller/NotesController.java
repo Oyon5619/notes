@@ -66,6 +66,14 @@ public class NotesController {
         return notesService.update(notes);
     }
 
+    @GetMapping("/increaseProficiency/{notesId}")
+    public boolean increaseProficiency(@PathVariable int notesId){
+        Notes notes = notesService.getNotesById(notesId);
+        notes.setProficiency(notes.getProficiency()+5);
+        notesService.update(notes);
+        return true;
+    }
+
     /**
      * 删除错题
      *

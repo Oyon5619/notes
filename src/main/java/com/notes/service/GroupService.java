@@ -29,6 +29,9 @@ public class GroupService {
     public String[] getGroupsName(String account) {
         try {
             User user = userMapper.selectById(account);
+            if(user.getUserGroups()==null){
+                return new String[0];
+            }
             return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
