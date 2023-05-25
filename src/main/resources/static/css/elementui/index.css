@@ -13975,7 +13975,8 @@
 }
 
 .el-calendar__title {
-    color: #000;
+    color: #003558;
+    font-size: 30px;
     -ms-flex-item-align: center;
     align-self: center
 }
