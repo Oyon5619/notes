@@ -153,7 +153,20 @@
 
             //查询复习计划
             getReview() {
-
+                console.log("getReview")
+                axios.post('/review/getReviews/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
+                    account: this.onlineUser.account,
+                    condition: {
+                        cycle:this.formInLine.cycle,
+                        status:this.formInLine.status,
+                        content:this.formInLine.content
+                    }
+                }).then(r => {
+                    this.pagination.currentPage = r.data.current;
+                    this.pagination.pageSize = r.data.size;
+                    this.pagination.total = r.data.total;
+                    this.reviews = r.data.records;
+                })
             },
 
             //添加复习计划
