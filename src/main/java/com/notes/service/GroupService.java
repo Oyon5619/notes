@@ -107,14 +107,14 @@ public class GroupService {
             notesMapper.deleteGroup(groupName);
             User user = userMapper.selectById(account);
             String group = user.getUserGroups();
-            if(group.contains("#")){ // 多个group
+            if(group.contains("#")){ // 多个groups
                 if(group.startsWith(groupName)){
                     user.setUserGroups(group.replace(groupName+"#",""));
                 }else{
                     user.setUserGroups(group.replace("#"+groupName,""));
                 }
                 userMapper.updateById(user);
-                return group.split("#");
+                return user.getUserGroups().split("#");
             }else{
                 user.setUserGroups("");
                 userMapper.updateById(user);
