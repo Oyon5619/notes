@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,10 @@ public class ReviewService {
     @Autowired
     WebSocket webSocket;
 
+
+    public Review getReviewById(int reviewId){
+        return reviewMapper.selectById(reviewId);
+    }
 
     public boolean addReview(Review review){
         try{
@@ -52,7 +57,22 @@ public class ReviewService {
             reviewMapper.selectPage(page,wrapper);
             return page;
         }
-        return null;
+        else{
+            QueryWrapper<Review> wrapper = new QueryWrapper<>();
+            wrapper.eq("promulgator",account);
+            wrapper.eq("deleted", false);
+            if(!condition.get("cycle").isEmpty())
+                if (!condition.get("cycle").equals("全部"))
+                    wrapper.eq("cycle", condition.get("cycle"));
+            if(!condition.get("status").isEmpty())
+                if(!condition.get("status").equals("全部"))
+                    wrapper.eq("status", condition.get("status"));
+            if (!condition.get("content").isEmpty())
+                wrapper.like("title", "%"+condition.get("content")+"%");
+            IPage<Review> page = new Page<>(currentPage, pageSize);
+            reviewMapper.selectPage(page,wrapper);
+            return page;
+        }
     }
 
     /**
