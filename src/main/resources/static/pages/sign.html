@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <title>打卡区</title>
 </head>
+<style>
+    #signup {
+        font-size: 20px;
+    }
+
+</style>
 <body>
 <div id="app">
 
-    <el-button type="primary" size="mini" style="position: absolute;right: 16%;top: 3%" :disabled="isSign" @click="signIn">签到</el-button>
+    <el-button type="primary" size="mini" style="position: absolute;right: 13%;top: 2.4%" :disabled="isSign" @click="signIn">签到</el-button>
     <el-calendar v-model="current">
         <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
         <template
                 slot="dateCell"
                 slot-scope="{date, data}">
-            <p>
-                {{ data.day.split('-').slice(1).join('-') }}
+                {{ date.getDate()}}
                 <br/>
                 <img v-if="getDetail(date,data.day)" src="../image/sign.png" style="width: 50px;height: 50px">
-            </p>
         </template>
     </el-calendar>
-    <h2 style="position:absolute;right: 30%;">当天打卡人数: {{signNumber}}</h2>
+    <div style="position:absolute;right: 1.5%;" id="signup">当天打卡人数: {{signNumber}}</div>
 </div>
 <script src="../js/vue.js"></script>
 <script src="../js/index.js"></script>
