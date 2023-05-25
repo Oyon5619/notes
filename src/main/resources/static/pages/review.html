@@ -77,6 +77,7 @@
             </el-row><br>
             <el-row>
                 <el-select placeholder="复习周期" v-model="reviewFormData.cycle">
+                    <el-option label="全部" value="全部"></el-option>
                     <el-option label="每月计划" value="每月计划"></el-option>
                     <el-option label="每周计划" value="每周计划"></el-option>
                     <el-option label="每日计划" value="每日计划"></el-option>
@@ -151,6 +152,13 @@
                 })
             },
 
+            refreshReview(){
+                axios.get('/review/refreshReview/'+this.onlineUser.account).then(res=>{
+                    if(res.data){
+                        console.log("刷新任务提醒!");
+                    }
+                })
+            },
             //查询复习计划
             getReview() {
                 console.log("getReview")
@@ -192,6 +200,7 @@
                         this.reviewFormData = {}
                         this.dialogVisible4Add = false;
                         this.$message.success("添加计划成功，记得按时完成哦~");
+                        this.refreshReview(); // 刷新任务提醒
                         this.getAllReview();
                     }
                 })

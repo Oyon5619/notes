@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.notes.domain.Notes;
 import com.notes.domain.Review;
 import com.notes.service.ReviewService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/review")
+@Slf4j
 public class ReviewController {
 
     @Autowired
@@ -19,6 +21,7 @@ public class ReviewController {
 
     @PostMapping("/getReviews/{currentPage}/{pageSize}")
     public IPage<Review> getReviews(@PathVariable long currentPage, @PathVariable long pageSize, @RequestBody Map<String,Object> map) {
+        log.info("getReviews");
         String account = (String) map.get("account");
         return reviewService.getReviews(currentPage,pageSize,account,new HashMap<>());
     }
