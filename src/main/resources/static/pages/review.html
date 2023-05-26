@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>复习计划</title>
+    <style>
+        .myLabel{
+            width: 120px;
+        }
+        .myContent{
+
+        }
+    </style>
 </head>
 <body>
-
 <div id="app">
     <el-main>
         <el-form :inline="true" :model="formInLine">
@@ -109,20 +116,42 @@
             </el-row>
     </el-dialog>
 
+    <!--  复习计划详情  -->
+    <el-dialog title="复习计划详情" :visible.sync="dialogVisible4Detail" width="40%" center>
+        <el-descriptions direction="horizontal" column="1" border label-class-name="myLabel" content-class-name="myContent">
+            <el-descriptions-item label="计划标题" >{{detailFrom.title}}</el-descriptions-item><br>
+            <el-descriptions-item label="复习周期">{{detailFrom.reviewTime}}</el-descriptions-item>
+            <el-descriptions-item label="计划状态"><el-tag size="small">{{detailFrom.status}}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="复习次数">{{detailFrom.num}}</el-descriptions-item>
+            <el-descriptions-item label="计划内容">{{detailFrom.content}}</el-descriptions-item>
+        </el-descriptions>
+        <div style="margin-top:20px;display: flex;align-items: center;justify-content: center;">
+            <el-button type="primary"  @click="dialogVisible4Detail=false">关闭</el-button>
+        </div>
+    </el-dialog>
 
 </div>
 <script src="../js/vue.js"></script>
 <script src="../js/index.js"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/axios-0.18.0.js"></script>
-<link rel="stylesheet" href="../plugins/elementui/index.css">
-<script src="../plugins/elementui/index.js"></script>
+<!--<link rel="stylesheet" href="../plugins/elementui/index.css">-->
+<link rel="stylesheet" href="../css/elementui/index.css">
+<!--<script src="../plugins/elementui/index.js"></script>-->
+<script src="../js/elementui/index.js"></script>
 <script>
     const vue = new Vue({
         el: "#app",
         data: {
             onlineUser: null,
             reviews: [],
+            detailFrom:{
+                title:"",
+                content:"",
+                reviewTime:"",
+                status:"",
+                num:0
+            },
             formInLine: {
                 cycle: '', // 复习周期
                 status: '', // 状态
@@ -135,6 +164,7 @@
                 total: 0
             },
             dialogVisible4Add:false,
+            dialogVisible4Detail:false,
             reviewFormData:{}
         },
         methods: {
@@ -159,6 +189,10 @@
                     }
                 })
             },
+            detail(row){
+                this.detailFrom = row;
+                this.dialogVisible4Detail = true;
+            },
             finishReview(row){
                 //弹出警告框,让用户进行二次确认
                 this.$confirm('确认完成这次计划吗?', 'Tips', {
@@ -169,7 +203,6 @@
                     //ajax发送批量删除请求
                     axios.get('/review/finishReview/'+row.reviewId).then(res=>{
                         if(res.data){
-                            console.log("刷新任务提醒!");
                             this.refreshReview();
                             this.$message.info("完成复习计划，休息一下吧 ~ ");
                         }
@@ -180,8 +213,29 @@
                     this.$message.info("已取消删除");
                 })
 
-
-
+            },
+            deleteReview(row){
+                //弹出警告框,让用户进行二次确认
+                this.$confirm('确认删除这次计划吗?', 'Tips', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //ajax发送批量删除请求
+                    axios.get('/review/deleteReview/'+row.reviewId).then(res=>{
+                        if(res.data){
+                            if(row.status==='进行中'){
+                                console.log("刷新任务提醒!");
+                                this.refreshReview();
+                            }
+                            this.$message.success("删除成功 ~ ");
+                        }
+                    }).finally(() => {
+                        this.getAllReview();
+                    });
+                }).catch(() => {
+                    this.$message.info("已取消删除");
+                })
             },
             //查询复习计划
             getReview() {
