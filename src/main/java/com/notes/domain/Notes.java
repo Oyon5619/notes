@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Notes {
     @TableId(type = IdType.ASSIGN_ID)
-    private int notesId; // 错题编号
+    private Integer notesId; // 错题编号
     private String notesTitle; //错题标题
     private String promulgator; //发布者账号
     private String priority; // 错题优先级
-    private int proficiency; // 熟练度
+    private Integer proficiency; // 熟练度
     private String subject; // 题目
     private String answer;// 答案
     private String respond ; // 我的答案
