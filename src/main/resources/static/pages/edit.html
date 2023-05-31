@@ -31,7 +31,6 @@
                     <el-select placeholder="选择错题标签.." v-model="notes.notesGroup" id="note-option">
                         <el-option :label="item" :value="item" v-for="item in notesGroupOption"></el-option>
                     </el-select>
-                    <!--                    <el-input v-model="notes.notesGroup" placeholder="输入分组..." id="note-option"></el-input>-->
                 </el-form-item>
             </el-form>
         </div>
@@ -211,7 +210,7 @@
             initEditor(e, type) {
                 e.config.width = 1100
                 e.config.height = 500
-                e.config.zindex = 0
+                e.config.zIndex = 0
                 e.config.uploadImgServer = 'http://localhost:8080/file/upload'// 填写配置服务器端地址
                 e.config.uploadImgHeaders = {
                     'Accept': 'application/json, text/plain, */*',

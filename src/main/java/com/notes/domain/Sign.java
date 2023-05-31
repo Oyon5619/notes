@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Sign implements Comparable<Sign>{
     @TableId(type = IdType.ASSIGN_ID)
-    private int signId;
+    private Integer signId;
     private String signer;
-    private int year;
-    private int month;
-    private int day;
+    private Integer year;
+    private Integer month;
+    private Integer day;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String signDate;
     @TableField(exist = false)
     private boolean hasSign; // 是否签到
     @TableField(exist = false)
-    private int cardNumber; // 当天打卡人数
+    private Integer cardNumber; // 当天打卡人数
 
     public Sign(String signer, int year, int month, int day, String signDate){
         this.signer = signer;

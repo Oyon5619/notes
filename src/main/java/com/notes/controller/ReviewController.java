@@ -7,7 +7,6 @@ import com.notes.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -20,7 +19,7 @@ public class ReviewController {
     @PostMapping("/getReviews/{currentPage}/{pageSize}")
     public IPage<Review> getReviews(@PathVariable long currentPage, @PathVariable long pageSize, @RequestBody Map<String,Object> map) {
         String account = (String) map.get("account");
-        return reviewService.getReviews(currentPage,pageSize,account,new HashMap<>());
+        return reviewService.getReviews(currentPage,pageSize,account, (Map<String, String>) map.get("condition"));
     }
 
     @PostMapping("/addReview")
@@ -48,8 +47,9 @@ public class ReviewController {
         return reviewService.deleteReview(reviewId);
     }
 
-    @PostMapping("/finishReview")
-    public boolean finishReview(@RequestBody Review review){
+    @GetMapping("/finishReview/{reviewId}")
+    public boolean finishReview(@PathVariable int reviewId){
+        Review review = reviewService.getReviewById(reviewId);
         return reviewService.finishReview(review);
     }
 

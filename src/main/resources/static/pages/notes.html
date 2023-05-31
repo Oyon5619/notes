@@ -185,12 +185,10 @@
             },
             deleteGroup(data){
                 console.log("deleteGroup")
-                console.log(data)
-                axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data).then(res =>{
-                    this.groups = res.data
-                    console.log("deleteGroupRes")
-                    console.log(res)
+                this.groups = this.groups.filter(function (i){
+                    return i !== data;
                 })
+                axios.get('/deleteGroup/'+this.onlineUser.account+"/"+data)
             },
 
             /**---------------标签管理-end--------------------*/

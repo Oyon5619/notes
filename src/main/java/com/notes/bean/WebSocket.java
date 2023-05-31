@@ -39,7 +39,7 @@ public class WebSocket {
         try {
             SESSIONS.add(session);
             SESSION_POOL.put(onlineUser, session);
-            log.info("【WebSocket消息】有新的连接，连接账号为：" + onlineUser);
+            log.info("【WebSocket消息】账号" + onlineUser+"登录系统");
             log.info("【WebSocket消息】有新的连接，总数为：" + SESSIONS.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,9 +47,11 @@ public class WebSocket {
     }
 
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session, @PathParam(value = "onlineUser")String onlineUser) {
         try {
             SESSIONS.remove(session);
+            SESSION_POOL.remove(onlineUser);
+            log.info("【WebSocket消息】账号" + onlineUser+"退出系统");
             log.info("【WebSocket消息】连接断开，总数为：" + SESSIONS.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,5 +127,12 @@ public class WebSocket {
                 }
             }
         }
+    }
+
+    /**
+     * 检测用户是否登录
+     * */
+    public boolean checkUserHasLogin(String account){
+        return SESSION_POOL.containsKey(account);
     }
 }

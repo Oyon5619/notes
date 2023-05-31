@@ -29,20 +29,21 @@ public class GroupService {
     public String[] getGroupsName(String account) {
         try {
             User user = userMapper.selectById(account);
-            if(user.getUserGroups()==null){
+            if(user.getUserGroups()==null||user.getUserGroups().length()==0){ // null 或空字符串
                 return new String[0];
             }
-            return user.getUserGroups().split("#");
+            String[] ret = user.getUserGroups().split("#");
+            return ret;
         } catch (Exception e) {
             e.printStackTrace();
+            return new String[0];
         }
-        return null;
     }
 
     /**
      * 缓存
      * 添加组名
-     *
+     *判断是否为空字符串或null，是的话直接添加，否则先补#再添加
      * @param account      当前用户账号
      * @param newGroupName 新组名
      * @return 所有组名
@@ -51,11 +52,17 @@ public class GroupService {
     public String[] addGroup(String account, String newGroupName) {
         try {
             User user = userMapper.selectById(account);
-            String label = user.getUserGroups()+newGroupName+"#";
-            user.setUserGroups(label);
+            String group = user.getUserGroups();
+            if(group==null ||group.length()==0){
+                user.setUserGroups(newGroupName);
+                userMapper.updateById(user);
+                return new String[]{newGroupName};
+            }else{
+                group = group +"#"+newGroupName;
+                user.setUserGroups(group);
+            }
             userMapper.updateById(user);
-            return label.split("#");
-
+            return user.getUserGroups().split("#");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,11 +106,20 @@ public class GroupService {
         try {
             notesMapper.deleteGroup(groupName);
             User user = userMapper.selectById(account);
-            groupName += "#";
             String group = user.getUserGroups();
-            user.setUserGroups(group.replace(groupName,""));
-            userMapper.updateById(user);
-            return user.getUserGroups().split("#");
+            if(group.contains("#")){ // 多个groups
+                if(group.startsWith(groupName)){
+                    user.setUserGroups(group.replace(groupName+"#",""));
+                }else{
+                    user.setUserGroups(group.replace("#"+groupName,""));
+                }
+                userMapper.updateById(user);
+                return user.getUserGroups().split("#");
+            }else{
+                user.setUserGroups("");
+                userMapper.updateById(user);
+                return new String[0];
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
