@@ -6,25 +6,35 @@
 html, body {
     width: 100%;
     height: 100%;
-    font-family: '幼圆';
+    font-family: '黑体';
 }
 
 #detail {
+    overflow: auto;
+    margin: 0 auto;
     width: 100%;
     height: 100%;
     position: relative;
+    /*margin: 0 auto;*/
+}
+
+#detail #top {
+    overflow: hidden;
     margin: 0 auto;
+    width: 1450px;
 }
 
 .page-title {
     top: 15px;
-    border-top: 15px solid #ccc;
-    border-bottom: 15px solid #ccc;
+    margin: 0px auto;
+    width: 1600px;
+    box-sizing: border-box;
     padding-left: 30px;
-    color: #fff;
-    font-size: 40px;
+    color: #333E4F;
+    border-left: 10px solid #333E4F;
+    font-size: 36px;
     line-height: 80px;
-    background: #3C8DBC;
+    background: #E5E9EE;
 }
 
 #level > div {
@@ -34,12 +44,12 @@ html, body {
 }
 
 #main {
-    padding: 20px;
-    height: 180vh;
-    background: #eee;
-    width: 70%;
-    margin: 0 auto;
-    overflow-y: auto;
+    box-sizing: border-box;
+    /*padding: 20px;*/
+    height: 100%;
+    /*background: #eee;*/
+    width: 1450px;
+    margin: 20px auto;
 }
 
 li.el-menu-item {
@@ -48,8 +58,8 @@ li.el-menu-item {
 }
 
 .el-card {
-    border: 3px solid #3C8DBC;
-    border-radius: 0.6em;
+    border: 2px solid #333E4F;
+    border-radius: 0.3em;
     padding: 20px;
     margin-top: 10px;
     font-size: 25px;
@@ -61,9 +71,9 @@ li.el-menu-item {
 }
 
 #main > div {
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-bottom: 80px;
+    /*margin-left: 30px;*/
+    /*margin-right: 30px;*/
+    margin-bottom: 30px;
 }
 
 #process-bar {
@@ -76,6 +86,5 @@ li.el-menu-item {
     text-align: right;
 }
 .el-button {
-    font-family: '幼圆';
     font-size: 30px;
 }

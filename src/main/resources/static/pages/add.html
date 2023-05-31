@@ -14,28 +14,36 @@
 
 <body>
 <div id="add">
-    <h1 class="page-title">新增错题</h1>
+<!--    <h1 class="page-title">新增错题</h1>-->
 <!--    <div class="demo">-->
 <!--        <div class="s1"></div>-->
 <!--        <div class="s2">错题内容</div>-->
 <!--    </div>-->
-
+<!--    <h1 class="page-title" ><div style="position: relative;left: 4.5%">新增错题</div></h1>-->
     <div id="middle">
-        <el-form :inline="true" :rules="rules" ref="notesForm" :model="notes">
-            <el-form-item label="错题标题" prop="notesTitle">
-                <el-input v-model="notes.notesTitle" placeholder="输入错题标题..."></el-input>
-            </el-form-item>
-            <el-form-item label="优先级" prop="priority">
-                <el-select placeholder="选择错题优先级.." v-model="notes.priority">
-                    <el-option label="高优先级" value="3"></el-option>
-                    <el-option label="中优先级" value="2"></el-option>
-                    <el-option label="低优先级" value="1"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="分组" prop="notesGroup">
-                <el-input v-model="notes.notesGroup" placeholder="输入分组..."></el-input>
-            </el-form-item>
-        </el-form>
+        <div id="sub-middle">
+            <el-form :inline="true" :rules="rules" ref="notesForm" :model="notes">
+                <el-form-item label="错题标题" prop="notesTitle" id="note-title-item">
+                    <el-input v-model="notes.notesTitle" placeholder="输入错题标题..." id="note-title-input"></el-input>
+                </el-form-item>
+                <el-form-item label="优先级" prop="priority">
+                    <el-select placeholder="选择错题优先级.." v-model="notes.priority" id="note-option">
+                        <el-option label="高优先级" value="3"></el-option>
+                        <el-option label="中优先级" value="2"></el-option>
+                        <el-option label="低优先级" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="分组" prop="notesGroup">
+                    <el-select placeholder="选择错题分组.." v-model="notes.notesGroup" id="note-option">
+                        <el-option :label="item" :value="item" v-for="item in notesGroupOption"></el-option>
+                    </el-select>
+<!--                    <el-input v-model="notes.notesGroup" placeholder="输入分组..." id="note-option"></el-input>-->
+                </el-form-item>
+            </el-form>
+        </div>
+
+<!--        <img class="page-title" src="../image/addTitle.png">-->
+
     </div>
 
     <div style="margin-left: 0px">
@@ -93,7 +101,8 @@
                     notesTitle: [{required: true, message: '请输入错题标题', trigger: 'blur'}],
                     priority: [{required: true, message: '请输入优先级', trigger: 'blur'}],
                     notesGroup: [{required: true, message: '请输入错题分组', trigger: 'blur'}]
-                }
+                },
+                notesGroupOption: ['语文','数学','英语','物理','化学','生物','历史','地理','生物']
             }
         },
         methods: {
@@ -211,6 +220,7 @@
             initEditor(e, type) {
                 e.config.width = 1100
                 e.config.height = 500
+                e.config.zIndex = 0
                 e.config.uploadImgServer = 'http://localhost:8080/file/upload'// 填写配置服务器端地址
                 e.config.uploadImgHeaders = {
                     'Accept': 'application/json, text/plain, */*',
