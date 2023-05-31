@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Sign implements Comparable<Sign>{
     @TableId(type = IdType.ASSIGN_ID)
-    private Integer signId;
+    private int signId;
     private String signer;
     private Integer year;
     private Integer month;

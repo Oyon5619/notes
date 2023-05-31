@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Review {
     @TableId(type = IdType.ASSIGN_ID)
-    private Integer reviewId; // 计划id
+    private int reviewId; // 计划id
     private String promulgator; // 发布者
     private String title; // 计划标题
     private String content; // 详细内容
