@@ -21,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Slf4j
 @ServerEndpoint("/websocket/{onlineUser}")
 public class WebSocket {
-
     /**
      * 线程安全的无序的集合
      */

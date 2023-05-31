@@ -13975,13 +13975,14 @@
 }
 
 .el-calendar__title {
-    color: #000;
+    color: #003558;
+    font-size: 30px;
     -ms-flex-item-align: center;
     align-self: center
 }
 
 .el-calendar__body {
-    padding: 12px 20px 35px
+    padding: 12px 20px 5px
 }
 
 .el-calendar-table {

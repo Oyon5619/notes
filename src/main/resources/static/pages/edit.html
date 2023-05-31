@@ -14,45 +14,53 @@
 
 <body>
 <div id="add">
-    <h1 class="page-title">编辑错题</h1>
-
-    <div id="topDiv">
-        <el-button type="success" @click="handleEdit">确认提交&nbsp;&nbsp;<i class="el-icon-check"></i></el-button>
-        <el-button type="danger" @click="handleCancel">取消&nbsp;&nbsp;<i class="el-icon-close"></i></el-button>
-        <el-button type="warning" @click="resetAll">清空&nbsp;&nbsp;<i class="el-icon-warning"></i></el-button>
-    </div>
-
     <div id="middle">
-        <el-form :inline="true" :rules="rules" ref="notesForm" :model="notes">
-            <el-form-item label="错题标题" prop="notesTitle">
-                <el-input v-model="notes.notesTitle" placeholder="输入错题标题..."></el-input>
-            </el-form-item>
-            <el-form-item label="优先级" prop="priority">
-                <el-select placeholder="选择错题优先级.." v-model="notes.priority">
-                    <el-option label="高优先级" value="3"></el-option>
-                    <el-option label="中优先级" value="2"></el-option>
-                    <el-option label="低优先级" value="1"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="分组" prop="notesGroup">
-                <el-input v-model="notes.notesGroup" placeholder="输入分组..."></el-input>
-            </el-form-item>
-        </el-form>
+        <div id="sub-middle">
+            <el-form :inline="true" :rules="rules" ref="notesForm" :model="notes">
+                <el-form-item label="错题标题" prop="notesTitle" id="note-title-item">
+                    <el-input v-model="notes.notesTitle" placeholder="输入错题标题..." id="note-title-input"></el-input>
+                </el-form-item>
+                <el-form-item label="优先级" prop="priority">
+                    <el-select placeholder="选择错题优先级.." v-model="notes.priority" id="note-option">
+                        <el-option label="高优先级" value="3"></el-option>
+                        <el-option label="中优先级" value="2"></el-option>
+                        <el-option label="低优先级" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="标签" prop="notesGroup">
+                    <el-select placeholder="选择错题标签.." v-model="notes.notesGroup" id="note-option">
+                        <el-option :label="item" :value="item" v-for="item in notesGroupOption"></el-option>
+                    </el-select>
+                    <!--                    <el-input v-model="notes.notesGroup" placeholder="输入分组..." id="note-option"></el-input>-->
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 
     <div id="main">
         <!-- 错题内容 -->
-        <h2>错题内容</h2>
+        <h2>错题内容:</h2>
         <div id="subject"></div>
         <!-- 我的答案 -->
-        <h2>我的答案</h2>
+        <h2>我的答案:</h2>
         <div id="respond"></div>
         <!-- 标准答案 -->
-        <h2>标准答案</h2>
+        <h2>标准答案:</h2>
         <div id="answer"></div>
         <!-- 分析总结 -->
-        <h2>分析总结</h2>
+        <h2>分析总结:</h2>
         <div id="summary"></div>
+    </div>
+    <div id="topDiv">
+        <el-button style="position: absolute;left: 6.1%" type="primary" @click="handleAdd"><i class="el-icon-check"></i>&nbsp;确认提交&nbsp;
+        </el-button>
+        <el-button style="position: absolute;left: 18.5%" type="warning" @click="handleCancel"><i
+                class="el-icon-close"></i>&nbsp;取消&nbsp;
+        </el-button>
+        <el-button style="position: absolute;right: 4.9%" type="danger" @click="resetAll"><i
+                class="el-icon-warning"></i>&nbsp;清空&nbsp;
+        </el-button>
+        <br><br><br><br><br>
     </div>
 </div>
 </body>
@@ -83,7 +91,8 @@
                     notesTitle: [{ required: true, message: '请输入错题标题', trigger: 'blur' }],
                     priority: [{ required: true, message: '请输入优先级', trigger: 'blur' }],
                     notesGroup: [{ required: true, message: '请输入错题分组', trigger: 'blur' }]
-                }
+                },
+                notesGroupOption: ['语文','数学','英语','物理','化学','生物','历史','地理','生物']
             }
         },
         methods: {
@@ -120,7 +129,7 @@
                                     type: 'success',
                                     message: '修改成功!'
                                 })
-                                location.href = 'http://localhost:8080/pages/MyNotes.html'
+                                location.href = 'http://localhost:8080/pages/notes.html'
                             } else {
                                 this.$message({
                                     type: 'error',
@@ -142,7 +151,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    location.href="http://localhost:8080/pages/MyNotes.html"
+                    location.href="http://localhost:8080/pages/notes.html"
                     this.$message({
                         type: 'success',
                         message: '取消成功!'
@@ -202,6 +211,7 @@
             initEditor(e, type) {
                 e.config.width = 1100
                 e.config.height = 500
+                e.config.zindex = 0
                 e.config.uploadImgServer = 'http://localhost:8080/file/upload'// 填写配置服务器端地址
                 e.config.uploadImgHeaders = {
                     'Accept': 'application/json, text/plain, */*',

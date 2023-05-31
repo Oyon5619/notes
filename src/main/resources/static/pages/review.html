@@ -11,6 +11,7 @@
         <el-form :inline="true" :model="formInLine">
             <el-form-item>
                 <el-select placeholder="复习周期" v-model="formInLine.cycle">
+                    <el-option label="全部" value="全部"></el-option>
                     <el-option label="每月计划" value="每月计划"></el-option>
                     <el-option label="每周计划" value="每周计划"></el-option>
                     <el-option label="每日计划" value="每日计划"></el-option>
@@ -51,7 +52,7 @@
             <el-table-column label="操作" align="center" width="280">
                 <template slot-scope="scope">
                     <el-button type="success" size="mini" @click="detail(scope.row)">查看</el-button>
-                    <el-button type="primary" size="mini" @click="detail(scope.row)">完成</el-button>
+                    <el-button type="primary" size="mini" :disabled="scope.row.status==='已完成'" @click="finishReview(scope.row)">完成</el-button>
                     <el-button type="danger" size="mini" @click="deleteReview(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -151,9 +152,53 @@
                 })
             },
 
+            refreshReview(){
+                axios.get('/review/refreshReview/'+this.onlineUser.account).then(res=>{
+                    if(res.data){
+                        console.log("刷新任务提醒!");
+                    }
+                })
+            },
+            finishReview(row){
+                //弹出警告框,让用户进行二次确认
+                this.$confirm('确认完成这次计划吗?', 'Tips', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //ajax发送批量删除请求
+                    axios.get('/review/finishReview/'+row.reviewId).then(res=>{
+                        if(res.data){
+                            console.log("刷新任务提醒!");
+                            this.refreshReview();
+                            this.$message.info("完成复习计划，休息一下吧 ~ ");
+                        }
+                    }).finally(() => {
+                        this.getAllReview();
+                    });
+                }).catch(() => {
+                    this.$message.info("已取消删除");
+                })
+
+
+
+            },
             //查询复习计划
             getReview() {
-
+                console.log("getReview")
+                axios.post('/review/getReviews/'+this.pagination.currentPage+'/'+this.pagination.pageSize, {
+                    account: this.onlineUser.account,
+                    condition: {
+                        cycle:this.formInLine.cycle,
+                        status:this.formInLine.status,
+                        content:this.formInLine.content
+                    }
+                }).then(r => {
+                    this.pagination.currentPage = r.data.current;
+                    this.pagination.pageSize = r.data.size;
+                    this.pagination.total = r.data.total;
+                    this.reviews = r.data.records;
+                })
             },
 
             //添加复习计划
@@ -179,6 +224,7 @@
                         this.reviewFormData = {}
                         this.dialogVisible4Add = false;
                         this.$message.success("添加计划成功，记得按时完成哦~");
+                        this.refreshReview(); // 刷新任务提醒
                         this.getAllReview();
                     }
                 })
