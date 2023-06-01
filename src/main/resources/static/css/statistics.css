@@ -1,0 +1,112 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    padding-top: 5px;
+    position: relative;
+}
+
+#nav-bar {
+    height: 100%;
+    overflow: auto;
+    border-right: 1px solid #ddd;
+    box-sizing: border-box;
+    /*margin-top: 20px;*/
+    width: 320px;
+    top: 1px;
+    position: fixed;
+}
+#nav-bar a {
+    color: #000;
+    text-decoration: none;
+    margin: 0 auto;
+    display: block;
+    width: 230px;
+    height: 75px;
+    line-height: 75px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+    text-align: center;
+}
+#nav-bar a:last-child {
+    border: none;
+}
+#nav-bar a:hover {
+    width: 290px;
+    background: #E5E9EE;
+}
+
+#statistics {
+    position: absolute;
+    box-sizing: border-box;
+    overflow: auto;
+    /*background: #eee;*/
+    padding: 10px;
+    width: 75%;
+    margin-left: 360px;
+}
+
+.view-title {
+    box-sizing: border-box;
+    font-family: '黑体';
+    /*line-height: 60px;*/
+    margin-bottom: 12px;
+    color: #003558;
+    font-size: 24px;
+    /*background: #ccc;*/
+}
+
+#tagViewTitle {
+    /*border-left: 15px solid #4ec37d;*/
+}
+
+#publishViewTitle {
+    /*border-left: 15px solid #dd4938;*/
+}
+
+#priorityViewTitle {
+    /*border-left: 15px solid #55f7e8;*/
+}
+
+#statistics #totalView {
+    text-align: left;
+    font-family: '黑体';
+    background: #fff;
+    color: #333E4F;
+    margin-bottom: 5px;
+    font-size: 30px;
+    line-height: 45px;
+}
+
+hr {
+    margin-bottom: 20px;
+}
+
+#statistics .subDiv {
+    box-sizing: border-box;
+    border-radius: 0.5em;
+    border: 2px solid #333E4F;
+    margin-bottom: 30px;
+}
+
+#statistics #tagView {
+    background: #fff;
+    width: 750px;
+    height: 750px;
+}
+
+#statistics #publishView {
+    background: #fff;
+    width: 1000px;
+    height: 600px;
+}
+
+#statistics #priorityView {
+    background: #fff;
+    width: 700px;
+    height: 600px;
+}
