@@ -3,10 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>草稿纸</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../css/paper.css">
 </head>
+
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+
 <body>
-    <div>
-        PAPER
+    <div id="paper">
+        <div id="opr-box">
+            <div class="opr-btn" @click="addPaper()">新增草稿纸</div>
+            <div class="opr-btn" @click="removeAllPaper()">清空草稿纸</div>
+        </div>
+        <div id="main">
+            <div id="nothing-box" v-if="paperArr.length === 0"><i class="el-icon-document"></i>&nbsp;这里空空如也...</div>
+            <div id="paper-box" v-else>
+                <div class="paper-item" v-for="item in paperArr" :key="item.id">
+                    <el-input type="textarea" resize="none" :value="item.value" v-model="item.value" placeholder="输入草稿内容..."></el-input>
+                    <i class="el-icon-close item-close-btn" @click="removeOne(item.id)"></i>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
+<script type="text/javascript">
+
+    var v = new Vue({
+        el: '#paper',
+        data() {
+            return {
+                // paperArr: [{id:1001,value:'aaa'},{id:1002,value:'bbb'},{id:1003,value:'ccc'}],
+                paperArr: [],
+                curIdx: 1001,
+            }
+        },
+        mounted() {
+
+        },
+        beforeDestroy() {
+            // console.log('beforeDestroy');
+            // console.log(this.paperArr);
+        },
+        methods: {
+            addPaper() {
+                console.log(this.curIdx++);
+                var paperObj = { id: this.curIdx, value: '' };
+                this.paperArr.unshift(paperObj);
+                this.$message.success('新增草稿纸成功~');
+            },
+            removeOne(itemId) {
+                // console.log(itemId);
+                this.$confirm('确认删除这张草稿纸?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.paperArr = this.paperArr.filter(item => item.id !== itemId);
+                    this.$message.success('删除成功!');
+                }).catch(() => {
+                    this.$message.info('已取消操作');
+                });
+            },
+            removeAllPaper() {
+                if (this.paperArr.length === 0) {
+                    this.$message.info('当前空空如也...');
+                    return;
+                }
+                this.$confirm('确认清空所有草稿纸?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    // 进行清零操作
+                    this.paperArr = [];
+                    this.paperNum = 0;
+                    this.$message.success('清空成功!');
+                }).catch(() => {
+                    this.$message.info('已取消操作');
+                });
+            }
+        }
+    })
+</script>
 </html>
